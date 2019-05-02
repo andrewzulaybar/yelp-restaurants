@@ -12,10 +12,12 @@ url = API_URL + API_PATH
 headers = {'authorization': 'bearer %s' % secrets.YELP_API_KEY}
 params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}
 
-response = requests.get(url=url, headers=headers, params=params)
+try:
+    # Send GET request to Yelp Fusion API
+    response = requests.get(url=url, headers=headers, params=params)
 
-if response.status_code == 200:
-    # Obtain restaurant data from JSON response
-    RESTAURANTS = response.json()
-else:
-    print("HTTP request error: %s" % response.status_code)
+    # If successful, obtain restaurant data from JSON response
+    RESTAURANTS = response.json()['businesses']
+except requests.exceptions.RequestException as error:
+    # Otherwise, print error
+    print(error)
