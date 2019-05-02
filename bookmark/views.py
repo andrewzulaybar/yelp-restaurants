@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+from bookmark import restaurants
 
 
 def home(request):
-    return HttpResponse('<h1> Hello, world! </h1>')
+    return render(request, 'bookmark/home.html', {'title': 'Home Page', 'restaurants': restaurants.RESTAURANTS})
