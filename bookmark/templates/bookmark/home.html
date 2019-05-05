@@ -1,0 +1,10 @@
+{% extends "bookmark/base.html" %}
+{% block content %}
+    {% for restaurant in restaurants %}
+    <div class="card">
+        <div class="card-body">
+            <p> {{ restaurant.name }} </p>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock content %}
