@@ -11,6 +11,9 @@
         <!-- Custom CSS -->
         <link rel="stylesheet" type="text/css" href="{% static 'bookmark/main.css' %}">
 
+        <!-- Custom fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
         <title> {{ title }} </title>
     </head>
     <body id="bootstrap-overrides">
@@ -35,7 +38,7 @@
                 <div class="input-group my-2 offset-sm-2 offset-md-4 offset-lg-6 offset-xl-8">
                     <input class="form-control" type="search" placeholder="Search" aria-label="Search">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
                     </div>
                 </div>
             </div>
@@ -44,8 +47,8 @@
         <!-- Main content -->
         <main role="main" class="container">
             <div class="row">
-                <div class="col-6 offset-3">
-                    {% block content %}{% endblock content %}
+                <div class="col col-sm-8 col-md-6 col-lg-4 offset-sm-2 offset-md-3 offset-lg-4">
+                    {% block  content %}{% endblock content %}
                 </div>
             </div>
         </main>
