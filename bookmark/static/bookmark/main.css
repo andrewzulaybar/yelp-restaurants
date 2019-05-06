@@ -1,0 +1,36 @@
+/* current font */
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* remove border from cards */
+#bootstrap-overrides .card {
+    border-width: 0px;
+}
+
+/* prevent line breaking when card width is small */
+#bootstrap-overrides .card-title, .card-subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* subtitle font customization */
+#bootstrap-overrides .card-subtitle {
+    color: gray;
+    font-weight: normal;
+}
+
+/* fix image size */
+#bootstrap-overrides .img-thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-width: 0px;
+}
+
+/* change background color of active nav link */
+#bootstrap-overrides .nav-link.active {
+    border-bottom-color: #f8f9fA;
+    background-color: #f8f9fA;
+}
