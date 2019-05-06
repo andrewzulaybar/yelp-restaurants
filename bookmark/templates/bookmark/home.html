@@ -1,10 +1,35 @@
 {% extends "bookmark/base.html" %}
 {% block content %}
     {% for restaurant in restaurants %}
-    <div class="card">
-        <div class="card-body">
-            <p> {{ restaurant.name }} </p>
+        <!-- Card -->
+        <div class="card shadow-sm mb-3 bg-light">
+            <!-- Card header: title, subtitle, and navigation tabs -->
+            <div class="card-header">
+                <h5 class="card-title">{{ restaurant.name }}</h5>
+                <h6 class="card-subtitle"> {{ restaurant.location.address1 }} </h6>
+                <ul class="nav nav-tabs card-header-tabs pt-2">
+                    <li class="nav-item card">
+                        <a class="nav-link active" href="#">Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Hours</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Location</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Card body: image -->
+            <div class="card-body p-2">
+                <div class="d-flex align-items-center">
+                    <img class="img-thumbnail float-left mr-2" src="{{ restaurant.image_url }}" alt="...">
+                </div>
+            </div>
+            <!-- Card footer: bookmark and visited buttons -->
+            <div class="card-footer p-2">
+                <button type="button" class="btn-sm btn-primary">Visited</button>
+                <button type="button" class="btn-sm btn-primary float-right">Bookmark</button>
+            </div>
         </div>
-    </div>
     {% endfor %}
 {% endblock content %}
