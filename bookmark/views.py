@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from bookmark.api import bookmarks as bm, restaurants
+from bookmark.api import bookmarks as bm, restaurants, visited as vis
 
 
 def home(request):
@@ -9,3 +9,7 @@ def home(request):
 
 def bookmarks(request):
     return render(request, 'bookmark/bookmarks.html', {'title': 'Bookmarks', 'restaurants': bm.RESTAURANTS})
+
+
+def visited(request):
+    return render(request, 'bookmark/visited.html', {'title': 'Visited', 'restaurants': vis.RESTAURANTS})
