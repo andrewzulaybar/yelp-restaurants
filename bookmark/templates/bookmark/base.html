@@ -54,6 +54,15 @@
         <main role="main" class="container">
             <div class="row">
                 <div class="col col-sm-8 col-md-6 col-lg-4 offset-sm-2 offset-md-3 offset-lg-4">
+                    <!-- Alert messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- Content -->
                     {% block content %}{% endblock content %}
                 </div>
             </div>
