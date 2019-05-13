@@ -43,9 +43,15 @@
                 {% endblock visited %}
                 <!-- Bookmark form -->
                 {% block bookmark %}
-                    <form>
+                    <form action="add-to-bookmarks" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="name" value="{{ restaurant.name }}">
+                        <input type="hidden" name="address" value="{{ restaurant.location.address1 }}">
+                        <input type="hidden" name="business_id" value="{{ restaurant.id }}">
+                        <input type="hidden" name="visited" value="False">
+                        <input type="hidden" name="bookmark" value="True">
                         {% block bookmark_button %}
-                        <input type="submit" class="btn-sm btn-primary float-right" value="Bookmark">
+                            <input type="submit" class="btn-sm btn-primary float-right" value="Bookmark">
                         {% endblock bookmark_button %}
                     </form>
                 {% endblock bookmark %}

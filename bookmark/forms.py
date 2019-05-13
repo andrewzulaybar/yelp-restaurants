@@ -7,3 +7,9 @@ class VisitedForm(forms.ModelForm):
     class Meta:
         model = Restaurant
         fields = "__all__"
+
+
+class BookmarkForm(forms.ModelForm):
+    class Meta:
+        model = Restaurant
+        fields = "__all__"

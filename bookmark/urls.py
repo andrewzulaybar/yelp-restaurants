@@ -6,5 +6,6 @@ urlpatterns = [
     path('', views.home, name='bookmark-home'),
     path('bookmarks', views.bookmarks, name='bookmark-bookmarks'),
     path('visited', views.visited, name='bookmark-visited'),
-    url(r'^', views.add_to_visited, name='add-to-visited')
+    url(r'^', views.add_to_visited, name='add-to-visited'),
+    url(r'^', views.add_to_bookmarks, name='add-to-bookmarks')
 ]
