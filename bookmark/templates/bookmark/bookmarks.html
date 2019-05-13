@@ -1,4 +1,10 @@
-{% extends "bookmark/card.html" %}
-{% block footer %}
-    <button type="button" class="btn-sm btn-primary btn-block">Visited</button>
-{% endblock footer %}
+{% extends "bookmark/home.html" %}
+
+<!-- Visited button -->
+{% block visited_button %}
+    <input type="submit" class="btn-sm btn-primary btn-block" value="Visited">
+{% endblock visited_button %}
+
+<!-- Bookmark form -->
+{% block bookmark %}
+{% endblock bookmark %}
