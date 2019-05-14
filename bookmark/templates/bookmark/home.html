@@ -7,22 +7,26 @@
             <div class="card-header">
                 <h5 class="card-title">{{ restaurant.name }}</h5>
                 <h6 class="card-subtitle"> {{ restaurant.location.address1 }} </h6>
-                <ul class="nav nav-tabs card-header-tabs pt-2">
-                    <li class="nav-item card">
-                        <a class="nav-link active" href="#">Info</a>
+                <ul class="nav nav-tabs card-header-tabs pt-2" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#info{{ restaurant.id }}">Info</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Hours</a>
+                        <a class="nav-link" data-toggle="tab" href="#hours{{ restaurant.id }}" role="tab">Hours</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Location</a>
+                        <a class="nav-link" data-toggle="tab" href="#location{{ restaurant.id }}" role="tab">Location</a>
                     </li>
                 </ul>
             </div>
             <!-- Card body -->
             <div class="card-body p-2">
-                <div class="d-flex align-items-center">
-                    <img class="img-thumbnail float-left mr-2" src="{{ restaurant.image_url }}" alt="...">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="info{{ restaurant.id }}" role="tabpanel">
+                        <img class="img-thumbnail float-left mr-2" src="{{ restaurant.image_url }}" alt="...">
+                    </div>
+                    <div class="tab-pane fade" id="hours{{ restaurant.id }}" role="tabpanel"></div>
+                    <div class="tab-pane fade" id="location{{ restaurant.id }}" role="tabpanel"></div>
                 </div>
             </div>
             <!-- Card footer -->
