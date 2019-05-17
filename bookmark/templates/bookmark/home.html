@@ -1,4 +1,6 @@
 {% extends "bookmark/base.html" %}
+
+<!-- Content -->
 {% block content %}
     {% for restaurant in restaurants %}
         <!-- Card -->
@@ -30,36 +32,34 @@
                 </div>
             </div>
             <!-- Card footer -->
+            {% block footer %}
             <div class="card-footer p-2">
                 <!-- Visited form -->
-                {% block visited %}
-                    <form action="add-to-visited" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="name" value="{{ restaurant.name }}">
-                        <input type="hidden" name="address" value="{{ restaurant.location.address1 }}">
-                        <input type="hidden" name="business_id" value="{{ restaurant.id }}">
-                        <input type="hidden" name="visited" value="True">
-                        <input type="hidden" name="bookmark" value="False">
-                        {% block visited_button %}
-                            <input type="submit" class="btn-sm btn-primary float-left" value="Visited">
-                        {% endblock visited_button %}
-                    </form>
-                {% endblock visited %}
+                <form action="add-to-visited" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="name" value="{{ restaurant.name }}">
+                    <input type="hidden" name="address" value="{{ restaurant.location.address1 }}">
+                    <input type="hidden" name="business_id" value="{{ restaurant.id }}">
+                    <input type="hidden" name="visited" value="True">
+                    <input type="hidden" name="bookmark" value="False">
+                    {% block visited_button %}
+                        <input type="submit" class="btn-sm btn-primary float-left" value="Visited">
+                    {% endblock visited_button %}
+                </form>
                 <!-- Bookmark form -->
-                {% block bookmark %}
-                    <form action="add-to-bookmarks" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="name" value="{{ restaurant.name }}">
-                        <input type="hidden" name="address" value="{{ restaurant.location.address1 }}">
-                        <input type="hidden" name="business_id" value="{{ restaurant.id }}">
-                        <input type="hidden" name="visited" value="False">
-                        <input type="hidden" name="bookmark" value="True">
-                        {% block bookmark_button %}
-                            <input type="submit" class="btn-sm btn-primary float-right" value="Bookmark">
-                        {% endblock bookmark_button %}
-                    </form>
-                {% endblock bookmark %}
+                <form action="add-to-bookmarks" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="name" value="{{ restaurant.name }}">
+                    <input type="hidden" name="address" value="{{ restaurant.location.address1 }}">
+                    <input type="hidden" name="business_id" value="{{ restaurant.id }}">
+                    <input type="hidden" name="visited" value="False">
+                    <input type="hidden" name="bookmark" value="True">
+                    {% block bookmark_button %}
+                        <input type="submit" class="btn-sm btn-primary float-right" value="Bookmark">
+                    {% endblock bookmark_button %}
+                </form>
             </div>
+            {% endblock footer %}
         </div>
     {% endfor %}
 {% endblock content %}

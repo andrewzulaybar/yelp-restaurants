@@ -1,10 +1,37 @@
 {% extends "bookmark/home.html" %}
 
+<!-- Main content -->
+{% block main %}
+    <div class="row">
+        <div class="col col-sm-8 col-md-6 col-lg-4 offset-sm-1 offset-md-3 offset-lg-4">
+            <!-- Alert messages -->
+            {% block alerts %}
+                {{ block.super }}
+            {% endblock alerts %}
+            <!-- Content -->
+            {% block content %}
+                {{ block.super }}
+            {% endblock content %}
+        </div>
+        <!-- Sidebar -->
+        <div class="d-none d-sm-block col-sm-3 col-md-3 col-lg-4">
+            <h5> Sort by...</h5>
+            <div class="btn-group-vertical">
+                <input type="submit" class="btn btn-primary active" value="Distance">
+                <input type="submit" class="btn btn-primary" value="Popularity">
+                <input type="submit" class="btn btn-primary" value="Rating">
+                <input type="submit" class="btn btn-primary" value="Cuisine">
+                <input type="submit" class="btn btn-primary" value="Open Now">
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
 <!-- Visited button -->
 {% block visited_button %}
     <input type="submit" class="btn-sm btn-primary btn-block" value="Visited">
 {% endblock visited_button %}
 
-<!-- Bookmark form -->
-{% block bookmark %}
-{% endblock bookmark %}
+<!-- Bookmark button -->
+{% block bookmark_button %}
+{% endblock bookmark_button %}

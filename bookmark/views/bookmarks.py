@@ -11,7 +11,7 @@ class BookmarksListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(BookmarksListView, self).get_context_data(**kwargs)
-        context['title'] = 'Visited'
+        context['title'] = 'Bookmarks'
 
         # Additional parameters
         params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}

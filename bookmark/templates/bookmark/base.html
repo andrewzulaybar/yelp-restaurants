@@ -22,8 +22,7 @@
             <!-- Navbar brand -->
             <a class="navbar-brand" href="{% url 'bookmark-home' %}">Bookmark'd</a>
             <!-- Navbar toggler -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- Navbar collapse -->
@@ -42,7 +41,7 @@
                 </ul>
                 <!-- Input group -->
                 <div class="input-group my-2 offset-sm-1 offset-md-3 offset-lg-5 offset-xl-7">
-                    <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control" type="search" placeholder="Search">
                     <div class="input-group-append">
                         <button class="btn btn-outline-primary" type="submit">Search</button>
                     </div>
@@ -52,20 +51,22 @@
 
         <!-- Main content -->
         <main role="main" class="container">
-            <div class="row">
+            {% block main %}
                 <div class="col col-sm-8 col-md-6 col-lg-4 offset-sm-2 offset-md-3 offset-lg-4">
                     <!-- Alert messages -->
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                    {% block alerts %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endblock alerts %}
                     <!-- Content -->
                     {% block content %}{% endblock content %}
                 </div>
-            </div>
+            {% endblock main %}
         </main>
 
         <!-- Optional JavaScript -->
