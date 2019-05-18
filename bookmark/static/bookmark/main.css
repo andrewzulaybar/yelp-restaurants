@@ -34,3 +34,11 @@ body {
     border-bottom-color: #f8f9fA;
     background-color: #f8f9fA;
 }
+
+/* remove border from close button */
+#bootstrap-overrides .close {
+    background-color: #f0f1f2;
+    border-width: 0px;
+    outline: none;
+    box-shadow: none;
+}

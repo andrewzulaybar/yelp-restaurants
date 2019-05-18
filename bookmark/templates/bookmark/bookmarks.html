@@ -14,18 +14,30 @@
             {% endblock content %}
         </div>
         <!-- Sidebar -->
-        <div class="d-none d-sm-block col-sm-3 col-md-3 col-lg-4">
+        <div class="d-none d-sm-block col-sm-3">
             <h5> Sort by...</h5>
             <div class="btn-group-vertical">
-                <input type="submit" class="btn btn-primary active" value="Distance">
+                <input type="submit" class="btn btn-primary" value="Distance">
                 <input type="submit" class="btn btn-primary" value="Popularity">
                 <input type="submit" class="btn btn-primary" value="Rating">
                 <input type="submit" class="btn btn-primary" value="Cuisine">
                 <input type="submit" class="btn btn-primary" value="Open Now">
+                <input type="submit" class="btn btn-primary active" value="Date Added">
             </div>
         </div>
     </div>
 {% endblock main %}
+
+<!-- Close button -->
+{% block close_button %}
+    <form action="delete" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="name" value="{{ restaurant.name }}">
+        <input type="hidden" name="business_id" value="{{ restaurant.id }}">
+        <input type="hidden" name="page" value="bookmarks">
+        <input type="submit" class="close" value="&times;">
+    </form>
+{% endblock close_button %}
 
 <!-- Visited button -->
 {% block visited_button %}

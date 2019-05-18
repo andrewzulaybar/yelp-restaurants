@@ -1,5 +1,16 @@
 {% extends "bookmark/home.html" %}
 
+<!-- Close button -->
+{% block close_button %}
+    <form action="delete" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="name" value="{{ restaurant.name }}">
+        <input type="hidden" name="business_id" value="{{ restaurant.id }}">
+        <input type="hidden" name="page" value="visited">
+        <input type="submit" class="close" value="&times;">
+    </form>
+{% endblock close_button %}
+
 <!-- Card footer -->
 {% block footer %}
 {% endblock footer %}
