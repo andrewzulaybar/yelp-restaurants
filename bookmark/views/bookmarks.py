@@ -111,3 +111,27 @@ class SortByCuisine(BookmarksMixin, ListView):
 
         context[self.context_object_name] = bookmarks
         return context
+
+
+class SortByRating(BookmarksMixin, ListView):
+    def sort_by_rating(self, elem):
+        return elem['rating']
+
+    def get_context_data(self, **kwargs):
+        context = super(SortByRating, self).get_context_data(**kwargs)
+        context['title'] = 'Bookmarks - Sort by Rating'
+
+        bookmarks = []
+        restaurants = Restaurant.objects.all()
+
+        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
+        for restaurant in restaurants:
+            if restaurant.bookmark:
+                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
+                bookmarks.append(r)
+
+        # Sort by highest to lowest rating
+        bookmarks.sort(key=self.sort_by_rating, reverse=True)
+
+        context[self.context_object_name] = bookmarks
+        return context

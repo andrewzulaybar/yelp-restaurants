@@ -19,7 +19,9 @@
             <div class="btn-group-vertical">
                 <input type="submit" class="btn btn-primary" value="Distance">
                 <input type="submit" class="btn btn-primary" value="Popularity">
-                <input type="submit" class="btn btn-primary" value="Rating">
+                <form action="{% url 'sort-by-rating' %}" method="get">
+                    <input type="submit" class="btn btn-primary btn-middle" value="Rating">
+                </form>
                 <form action="{% url 'sort-by-cuisine' %}" method="get">
                     <input type="submit" class="btn btn-primary btn-middle" value="Cuisine">
                 </form>
