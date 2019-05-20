@@ -48,3 +48,9 @@ body {
     border-radius: 0px;
     width: 110px;
 }
+
+/* round top-left and -right borders and set fixed width */
+#bootstrap-overrides .btn-end {
+    border-radius: 5px 5px 0px 0px;
+    width: 110px;
+}

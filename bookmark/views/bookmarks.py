@@ -159,3 +159,38 @@ class SortByPopularity(BookmarksMixin, ListView):
 
         context[self.context_object_name] = bookmarks
         return context
+
+
+class SortByDistance(BookmarksMixin, ListView):
+    def sort_by_distance(self, elem):
+        return elem['distance']
+
+    def get_context_data(self, **kwargs):
+        context = super(SortByDistance, self).get_context_data(**kwargs)
+        context['title'] = 'Bookmarks - Sort by Rating'
+
+        bookmarks = []
+        restaurants = Restaurant.objects.all()
+
+        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
+        for restaurant in restaurants:
+            if restaurant.bookmark:
+                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
+
+                # Do business search to find distance from current location
+                params = {'term': r['name'],
+                          'location': location.CURRENT_LOCATION,
+                          'categories': 'restaurants'}
+                search_results = yelp_api.get("v3/businesses/search", params)['businesses']
+
+                # Find matching business in search results
+                for result in search_results:
+                    if result['location']['address1'] == r['location']['address1']:
+                        bookmarks.append(result)
+                        break
+
+        # Sort by closest to furthest away
+        bookmarks.sort(key=self.sort_by_distance)
+
+        context[self.context_object_name] = bookmarks
+        return context

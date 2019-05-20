@@ -17,7 +17,9 @@
         <div class="d-none d-sm-block col-sm-3">
             <h5> Sort by...</h5>
             <div class="btn-group-vertical">
-                <input type="submit" class="btn btn-primary" value="Distance">
+                <form action="{% url 'sort-by-distance' %}" method="get">
+                    <input type="submit" class="btn btn-primary btn-end" value="Distance">
+                </form>
                 <form action="{% url 'sort-by-popularity' %}" method="get">
                     <input type="submit" class="btn btn-primary btn-middle" value="Popularity">
                 </form>
