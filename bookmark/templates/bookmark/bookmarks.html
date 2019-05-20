@@ -20,8 +20,10 @@
                 <input type="submit" class="btn btn-primary" value="Distance">
                 <input type="submit" class="btn btn-primary" value="Popularity">
                 <input type="submit" class="btn btn-primary" value="Rating">
-                <input type="submit" class="btn btn-primary" value="Cuisine">
-                <form action="is-open-now" method="get">
+                <form action="{% url 'sort-by-cuisine' %}" method="get">
+                    <input type="submit" class="btn btn-primary btn-middle" value="Cuisine">
+                </form>
+                <form action="{% url 'is-open-now' %}" method="get">
                     <input type="submit" class="btn btn-primary btn-middle" value="Open Now">
                 </form>
                 <input type="submit" class="btn btn-primary" value="Date Added">

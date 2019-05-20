@@ -16,8 +16,6 @@ class BookmarksMixin(object):
     # Additional parameters
     params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}
 
-    restaurants = Restaurant.objects.all()
-
 
 class BookmarksListView(BookmarksMixin, ListView):
     def get_context_data(self, **kwargs):
@@ -25,9 +23,10 @@ class BookmarksListView(BookmarksMixin, ListView):
         context['title'] = 'Bookmarks'
 
         bookmarks = []
+        restaurants = Restaurant.objects.all()
 
         # If restaurants in database are bookmarked, pull data from Yelp Fusion API
-        for restaurant in self.restaurants:
+        for restaurant in restaurants:
             if restaurant.bookmark:
                 r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
                 bookmarks.append(r)
@@ -73,9 +72,10 @@ class IsOpenNow(BookmarksMixin, ListView):
         context['title'] = 'Bookmarks - Open Now'
 
         bookmarks = []
+        restaurants = Restaurant.objects.all()
 
         # If restaurants in database are bookmarked, pull data from Yelp Fusion API
-        for restaurant in self.restaurants:
+        for restaurant in restaurants:
             if restaurant.bookmark:
                 r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
                 # If restaurant is open now, add to context
@@ -84,6 +84,30 @@ class IsOpenNow(BookmarksMixin, ListView):
                         bookmarks.append(r)
                 except KeyError:
                     pass
+
+        context[self.context_object_name] = bookmarks
+        return context
+
+
+class SortByCuisine(BookmarksMixin, ListView):
+    def sort_by_cuisine(self, elem):
+        return elem['categories'][0]['title']
+
+    def get_context_data(self, **kwargs):
+        context = super(SortByCuisine, self).get_context_data(**kwargs)
+        context['title'] = 'Bookmarks - Sort by Cuisine'
+
+        bookmarks = []
+        restaurants = Restaurant.objects.all()
+
+        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
+        for restaurant in restaurants:
+            if restaurant.bookmark:
+                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
+                bookmarks.append(r)
+
+        # Sort alphabetically by first category title
+        bookmarks.sort(key=self.sort_by_cuisine)
 
         context[self.context_object_name] = bookmarks
         return context
