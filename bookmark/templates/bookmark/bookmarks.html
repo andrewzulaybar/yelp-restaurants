@@ -18,7 +18,7 @@
             <h5> Sort by...</h5>
             <div class="btn-group-vertical">
                 <form action="{% url 'sort-by-distance' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-end" value="Distance">
+                    <input type="submit" class="btn btn-primary btn-top" value="Distance">
                 </form>
                 <form action="{% url 'sort-by-popularity' %}" method="get">
                     <input type="submit" class="btn btn-primary btn-middle" value="Popularity">
@@ -32,7 +32,9 @@
                 <form action="{% url 'is-open-now' %}" method="get">
                     <input type="submit" class="btn btn-primary btn-middle" value="Open Now">
                 </form>
-                <input type="submit" class="btn btn-primary" value="Date Added">
+                <form action="{% url 'bookmark-bookmarks' %}" method="get">
+                    <input type="submit" class="btn btn-primary btn-bottom" value="Date Added">
+                </form>
             </div>
         </div>
     </div>

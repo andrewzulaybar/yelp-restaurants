@@ -50,7 +50,13 @@ body {
 }
 
 /* round top-left and -right borders and set fixed width */
-#bootstrap-overrides .btn-end {
+#bootstrap-overrides .btn-top {
     border-radius: 5px 5px 0px 0px;
+    width: 110px;
+}
+
+/* round bottom-left and -right borders and set fixed width */
+#bootstrap-overrides .btn-bottom {
+    border-radius: 0px 0px 5px 5px;
     width: 110px;
 }
