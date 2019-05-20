@@ -8,5 +8,6 @@ urlpatterns = [
     path('visited', views.VisitedListView.as_view(), name='bookmark-visited'),
     url(r'^add-to-bookmarks', views.bookmarks.AddToBookmarksView.as_view(), name='add-to-bookmarks'),
     url(r'^add-to-visited', views.visited.AddToVisitedView.as_view(), name='add-to-visited'),
-    url(r'^delete', views.DeleteView.as_view(), name='delete')
+    url(r'^delete', views.DeleteView.as_view(), name='delete'),
+    url(r'^is-open-now', views.IsOpenNow.as_view(), name='is-open-now')
 ]

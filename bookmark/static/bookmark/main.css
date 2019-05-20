@@ -42,3 +42,9 @@ body {
     outline: none;
     box-shadow: none;
 }
+
+/* remove rounded borders and set fixed width */
+#bootstrap-overrides .btn-middle {
+    border-radius: 0px;
+    width: 110px;
+}

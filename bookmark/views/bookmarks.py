@@ -8,28 +8,31 @@ from bookmark.forms import BookmarkForm
 from bookmark.models import Restaurant
 
 
-class BookmarksListView(ListView):
+class BookmarksMixin(object):
     model = Restaurant
     template_name = 'bookmark/bookmarks.html'
     context_object_name = 'restaurants'
 
+    # Additional parameters
+    params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}
+
+    restaurants = Restaurant.objects.all()
+
+
+class BookmarksListView(BookmarksMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(BookmarksListView, self).get_context_data(**kwargs)
         context['title'] = 'Bookmarks'
 
-        # Additional parameters
-        params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}
+        bookmarks = []
 
         # If restaurants in database are bookmarked, pull data from Yelp Fusion API
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
-
-        for restaurant in restaurants:
+        for restaurant in self.restaurants:
             if restaurant.bookmark:
-                restaurant = yelp_api.get("v3/businesses/" + restaurant.business_id, params)
-                bookmarks.append(restaurant)
+                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
+                bookmarks.append(r)
 
-        context['restaurants'] = bookmarks
+        context[self.context_object_name] = bookmarks
         return context
 
 
@@ -62,3 +65,25 @@ class AddToBookmarksView(FormView):
         # Display error message and redirect user to home page
         messages.error(self.request, 'An error occurred! Please try again later.', extra_tags='danger')
         return redirect('bookmark-home')
+
+
+class IsOpenNow(BookmarksMixin, ListView):
+    def get_context_data(self, **kwargs):
+        context = super(IsOpenNow, self).get_context_data(**kwargs)
+        context['title'] = 'Bookmarks - Open Now'
+
+        bookmarks = []
+
+        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
+        for restaurant in self.restaurants:
+            if restaurant.bookmark:
+                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
+                # If restaurant is open now, add to context
+                try:
+                    if r['hours'][0]['is_open_now']:
+                        bookmarks.append(r)
+                except KeyError:
+                    pass
+
+        context[self.context_object_name] = bookmarks
+        return context
