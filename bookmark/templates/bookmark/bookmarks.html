@@ -34,7 +34,6 @@
         {% csrf_token %}
         <input type="hidden" name="name" value="{{ restaurant.name }}">
         <input type="hidden" name="business_id" value="{{ restaurant.id }}">
-        <input type="hidden" name="page" value="bookmarks">
         <input type="submit" class="close" value="&times;">
     </form>
 {% endblock close_button %}
