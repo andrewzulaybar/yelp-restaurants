@@ -13,12 +13,13 @@
 
         <!-- Custom fonts -->
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <title> {{ title }} </title>
     </head>
     <body id="bootstrap-overrides">
         <!-- Navigation bar -->
-        <nav class="navbar navbar-expand-sm navbar-light bg-light m-3 shadow-sm">
+        <nav class="navbar navbar-expand-sm navbar-light m-3">
             <!-- Navbar brand -->
             <a class="navbar-brand" href="{% url 'bookmark-home' %}">Bookmark'd</a>
             <!-- Navbar toggler -->
@@ -30,20 +31,19 @@
                 <!-- Links -->
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="{% url 'bookmark-bookmarks' %}">Bookmarks</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/bookmarks">Bookmarks</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/visited">Visited</a>
+                        <a class="nav-link" href="{% url 'bookmark-visited' %}">Visited</a>
                     </li>
                 </ul>
                 <!-- Input group -->
                 <div class="input-group my-2 offset-sm-1 offset-md-3 offset-lg-5 offset-xl-7">
                     <input class="form-control" type="search" placeholder="Search">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                        <button class="btn" type="submit" id="search">
+                            <i class="material-icons" >search</i>
+                        </button>
                     </div>
                 </div>
             </div>

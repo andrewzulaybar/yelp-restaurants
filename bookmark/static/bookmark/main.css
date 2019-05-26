@@ -1,62 +1,171 @@
-/* current font */
+html {
+    background: linear-gradient(#433D6C 0%, #8C4E6D 40%, #F16967 75%, #FE6F53 100%);
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
 body {
+    background: transparent;
     font-family: 'Source Sans Pro', sans-serif;
+    height: 100%;
+    overflow: auto;
+    overscroll-behavior: none;
 }
 
-/* remove border from cards */
+/***** navigation bar *****/
+
+/* navbar */
+#bootstrap-overrides .navbar {
+    background-color: #333333;
+    border-radius: 15px;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.25), 0px 10px 20px rgba(0, 0, 0, 0.20);
+}
+
+/* navbar links */
+#bootstrap-overrides .navbar-brand,
+#bootstrap-overrides .nav-link {
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* common attributes for search form and button */
+#bootstrap-overrides .form-control,
+#bootstrap-overrides .input-group-append {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* search form */
+#bootstrap-overrides .form-control {
+    border-radius: 20px 0px 0px 20px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* search button */
+#bootstrap-overrides .input-group-append {
+    border-radius: 0px 20px 20px 0px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    height: 38px;
+}
+
+/***** main content *****/
+
+/* common attributes for alerts and cards */
+#bootstrap-overrides .alert,
 #bootstrap-overrides .card {
+    background-color: #333333;
+    border-radius: 15px;
     border-width: 0px;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.25), 0px 10px 20px rgba(0, 0, 0, 0.20);
+    color: rgba(255, 255, 255, 0.75);
+
 }
 
-/* prevent line breaking when card width is small */
-#bootstrap-overrides .card-title, .card-subtitle {
-    white-space: nowrap;
+/* common attributes for card title and subtitle */
+#bootstrap-overrides .card-title,
+#bootstrap-overrides .card-subtitle {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* subtitle font customization */
+/* card subtitle */
 #bootstrap-overrides .card-subtitle {
     color: gray;
     font-weight: normal;
 }
 
-/* fix image size */
-#bootstrap-overrides .img-thumbnail {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-width: 0px;
-}
-
-/* change background color of active nav link */
-#bootstrap-overrides .nav-link.active {
-    border-bottom-color: #f8f9fA;
-    background-color: #f8f9fA;
-}
-
-/* remove border from close button */
+/* card close button */
 #bootstrap-overrides .close {
-    background-color: #f0f1f2;
+    background-color: transparent;
     border-width: 0px;
-    outline: none;
     box-shadow: none;
+    color: rgba(255, 255, 255, 0.75);
+    outline: none;
 }
 
-/* remove rounded borders and set fixed width */
+/* card footer */
+#bootstrap-overrides #footer {
+    border-bottom-width: 0px;
+}
+
+/* bookmark and visited buttons */
+#bootstrap-overrides .btn-sm {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: #333333;
+    border-color: rgba(255, 255, 255, 0.75);
+    border-radius: 20px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* active state of bookmark and visited buttons */
+#bootstrap-overrides .btn-sm:active {
+    outline: none;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* focus state of bookmark and visited buttons */
+#bootstrap-overrides .btn-sm:focus {
+    outline: none;
+}
+
+/***** bookmarks sidebar *****/
+
+/* sidebar card header */
+#bootstrap-overrides #sort-by.card-header{
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* common attributes of sort-by buttons in bookmarks */
+#bootstrap-overrides .btn-bottom,
+#bootstrap-overrides .btn-middle,
+#bootstrap-overrides .btn-top {
+    background-color: #333333;
+    border-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.25);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* bottom sidebar button */
+#bootstrap-overrides .btn-bottom {
+    border-radius: 0px 0px 15px 15px;
+    border-top: none;
+}
+
+/* middle sidebar buttons */
 #bootstrap-overrides .btn-middle {
     border-radius: 0px;
-    width: 110px;
+    border-top: none;
 }
 
-/* round top-left and -right borders and set fixed width */
+/* top sidebar button */
 #bootstrap-overrides .btn-top {
-    border-radius: 5px 5px 0px 0px;
-    width: 110px;
+    border-radius: 15px 15px 0px 0px;
 }
 
-/* round bottom-left and -right borders and set fixed width */
-#bootstrap-overrides .btn-bottom {
-    border-radius: 0px 0px 5px 5px;
-    width: 110px;
+/* active state of sort-by buttons in bookmarks */
+#bootstrap-overrides .btn-bottom:active,
+#bootstrap-overrides .btn-middle:active,
+#bootstrap-overrides .btn-top:active {
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    outline: none;
+}
+
+/* sidebar left gutter */
+#bootstrap-overrides .card.sidebar {
+    margin-left: -15px;
 }

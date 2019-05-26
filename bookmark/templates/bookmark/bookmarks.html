@@ -3,7 +3,7 @@
 <!-- Main content -->
 {% block main %}
     <div class="row">
-        <div class="col col-sm-8 col-md-6 col-lg-4 offset-sm-1 offset-md-3 offset-lg-4">
+        <div class="col col-sm-8 col-md-6 col-lg-4 offset-md-2 offset-lg-4">
             <!-- Alert messages -->
             {% block alerts %}
                 {{ block.super }}
@@ -14,30 +14,32 @@
             {% endblock content %}
         </div>
         <!-- Sidebar -->
-        <div class="d-none d-sm-block col-sm-3">
-            <h5> Sort by...</h5>
-            <div class="btn-group-vertical">
-                <form action="{% url 'sort-by-distance' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-top" value="Distance">
-                </form>
-                <form action="{% url 'sort-by-popularity' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-middle" value="Popularity">
-                </form>
-                <form action="{% url 'sort-by-rating' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-middle" value="Rating">
-                </form>
-                <form action="{% url 'sort-by-cuisine' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-middle" value="Cuisine">
-                </form>
-                <form action="{% url 'sort-by-price' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-middle" value="Price">
-                </form>
-                <form action="{% url 'is-open-now' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-middle" value="Open Now">
-                </form>
-                <form action="{% url 'bookmark-bookmarks' %}" method="get">
-                    <input type="submit" class="btn btn-primary btn-bottom" value="Date Added">
-                </form>
+        <div class="d-none d-sm-block col-sm-4 col-md-3 col-lg-2">
+            <div class="card sidebar">
+                <div class="card-header text-center" id="sort-by">Sort by...</div>
+                <div class="card-body">
+                    <form action="{% url 'sort-by-distance' %}" method="get">
+                        <input type="submit" class="btn btn-top btn-block" value="Distance">
+                    </form>
+                    <form action="{% url 'sort-by-popularity' %}" method="get">
+                        <input type="submit" class="btn btn-middle btn-block" value="Popularity">
+                    </form>
+                    <form action="{% url 'sort-by-rating' %}" method="get">
+                        <input type="submit" class="btn btn-middle btn-block" value="Rating">
+                    </form>
+                    <form action="{% url 'sort-by-cuisine' %}" method="get">
+                        <input type="submit" class="btn btn-middle btn-block" value="Cuisine">
+                    </form>
+                    <form action="{% url 'sort-by-price' %}" method="get">
+                        <input type="submit" class="btn btn-middle btn-block" value="Price">
+                    </form>
+                    <form action="{% url 'is-open-now' %}" method="get">
+                        <input type="submit" class="btn btn-middle btn-block" value="Open Now">
+                    </form>
+                    <form action="{% url 'bookmark-bookmarks' %}" method="get">
+                        <input type="submit" class="btn btn-bottom btn-block" value="Date Added">
+                    </form>
+                </div>
             </div>
         </div>
     </div>

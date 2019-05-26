@@ -4,20 +4,16 @@
 {% block content %}
     {% for restaurant in restaurants %}
         <!-- Card -->
-        <div class="card shadow-sm mb-3 bg-light">
-            <!-- Card header -->
-            <div class="card-header">
+        <div class="card mb-3">
+            <!-- Card body -->
+            <div class="card-body">
                 {% block close_button %}{% endblock close_button %}
                 <h5 class="card-title">{{ restaurant.name }}</h5>
                 <h6 class="card-subtitle"> {{ restaurant.location.address1 }} </h6>
             </div>
-            <!-- Card body -->
-            <div class="card-body p-2">
-                <img class="img-thumbnail float-left mr-2" src="{{ restaurant.image_url }}" alt="...">
-            </div>
             <!-- Card footer -->
             {% block footer %}
-            <div class="card-footer p-2">
+            <div class="card-footer p-3">
                 <!-- Visited form -->
                 <form action="{% url 'add-to-visited' %}" method="post">
                     {% csrf_token %}
