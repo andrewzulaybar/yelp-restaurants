@@ -1,31 +1,22 @@
-html {
-    background: linear-gradient(#433D6C 0%, #8C4E6D 40%, #F16967 75%, #FE6F53 100%);
-    height: 100%;
-    overflow: hidden;
-    overscroll-behavior: none;
-}
-
 body {
     background: transparent;
     font-family: 'Source Sans Pro', sans-serif;
-    height: 100%;
-    overflow: auto;
-    overscroll-behavior: none;
 }
 
 /***** navigation bar *****/
 
 /* navbar */
 #bootstrap-overrides .navbar {
-    background-color: #333333;
+    background: white;
     border-radius: 15px;
-    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.25), 0px 10px 20px rgba(0, 0, 0, 0.20);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* navbar links */
 #bootstrap-overrides .navbar-brand,
 #bootstrap-overrides .nav-link {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(51, 51, 51, 1);
+    font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
@@ -33,35 +24,43 @@ body {
 /* common attributes for search form and button */
 #bootstrap-overrides .form-control,
 #bootstrap-overrides .input-group-append {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(51, 51, 51, 0.1);
+    border-color: rgba(51, 51, 51, 0.1);
+    color: rgba(51, 51, 51, 0.75);
 }
 
 /* search form */
 #bootstrap-overrides .form-control {
     border-radius: 20px 0px 0px 20px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* search button */
 #bootstrap-overrides .input-group-append {
     border-radius: 0px 20px 20px 0px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     height: 38px;
+    left: 1px;
+    position: relative;
 }
 
 /***** main content *****/
 
+#bootstrap-overrides .card-image-top {
+    border-radius: 15px 15px 0px 0px;
+    height: 150px;
+    object-fit: cover;
+}
+
 /* common attributes for alerts and cards */
 #bootstrap-overrides .alert,
 #bootstrap-overrides .card {
-    background-color: #333333;
     border-radius: 15px;
-    border-width: 0px;
-    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.25), 0px 10px 20px rgba(0, 0, 0, 0.20);
-    color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
 
+/* card */
+#bootstrap-overrides .card {
+    background-color: white;
+    color: rgba(51, 51, 51, 1);
 }
 
 /* common attributes for card title and subtitle */
@@ -83,32 +82,26 @@ body {
     background-color: transparent;
     border-width: 0px;
     box-shadow: none;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(51, 51, 51, 0.75);
     outline: none;
 }
 
 /* card footer */
-#bootstrap-overrides #footer {
+#bootstrap-overrides .card-footer {
     border-bottom-width: 0px;
+    border-radius: 0px 0px 15px 15px;
 }
 
 /* bookmark and visited buttons */
 #bootstrap-overrides .btn-sm {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: #333333;
-    border-color: rgba(255, 255, 255, 0.75);
+    background-color: transparent;
+    border-color: rgba(51, 51, 51, 0.7);
     border-radius: 20px;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(51, 51, 51, 0.7);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
-}
-
-/* active state of bookmark and visited buttons */
-#bootstrap-overrides .btn-sm:active {
-    outline: none;
-    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* focus state of bookmark and visited buttons */
@@ -130,10 +123,9 @@ body {
 #bootstrap-overrides .btn-bottom,
 #bootstrap-overrides .btn-middle,
 #bootstrap-overrides .btn-top {
-    background-color: #333333;
-    border-color: rgba(255, 255, 255, 0.75);
-    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.25);
-    color: rgba(255, 255, 255, 0.75);
+    background-color: transparent;
+    border-color: rgba(51, 51, 51, 0.7);
+    color: rgba(51, 51, 51, 0.7);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 2px;
@@ -161,7 +153,6 @@ body {
 #bootstrap-overrides .btn-bottom:active,
 #bootstrap-overrides .btn-middle:active,
 #bootstrap-overrides .btn-top:active {
-    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
     outline: none;
 }
 

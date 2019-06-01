@@ -1,19 +1,31 @@
 {% extends "bookmark/base.html" %}
+{% load staticfiles %}
 
 <!-- Content -->
 {% block content %}
     {% for restaurant in restaurants %}
         <!-- Card -->
         <div class="card mb-3">
+            {% if restaurant.image_url %}
+                <img class="card-image-top" src="{{ restaurant.image_url }}">
+            {% endif %}
             <!-- Card body -->
             <div class="card-body">
                 {% block close_button %}{% endblock close_button %}
                 <h5 class="card-title">{{ restaurant.name }}</h5>
-                <h6 class="card-subtitle"> {{ restaurant.location.address1 }} </h6>
+                <h6 class="card-subtitle">
+                    {{ restaurant.location.address1 }}
+                    {% if restaurant.categories.0.title %}
+                        &#8226; {{ restaurant.categories.0.title }}
+                    {% endif %}
+                    {% if restaurant.price %}
+                        &#8226; {{ restaurant.price }}
+                    {% endif %}
+                </h6>
             </div>
             <!-- Card footer -->
             {% block footer %}
-            <div class="card-footer p-3">
+            <div class="card-footer p-2">
                 <!-- Visited form -->
                 <form action="{% url 'add-to-visited' %}" method="post">
                     {% csrf_token %}
