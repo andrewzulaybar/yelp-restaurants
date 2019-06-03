@@ -19,7 +19,7 @@
     </head>
     <body id="bootstrap-overrides">
         <!-- Navigation bar -->
-        <nav class="navbar navbar-expand-sm navbar-light sticky-top mx-4">
+        <nav class="navbar navbar-expand-sm navbar-light sticky-top px-4">
             <!-- Navbar brand -->
             <a class="navbar-brand" href="{% url 'bookmark-home' %}">Bookmark'd</a>
             <!-- Navbar toggler -->
@@ -39,12 +39,18 @@
                 </ul>
                 <!-- Input group -->
                 <div class="input-group my-2 offset-sm-1 offset-md-3 offset-lg-5 offset-xl-7">
-                    <input class="form-control" type="search" placeholder="Search">
-                    <div class="input-group-append">
-                        <button class="btn" type="submit" id="search">
-                            <i class="material-icons" >search</i>
-                        </button>
-                    </div>
+                    <!-- Search bar -->
+                    <form action="{% url 'search' %}" method="post" id="search">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input class="form-control" type="search" placeholder="Search">
+                            <div class="input-group-append">
+                                <button class="btn" type="submit">
+                                    <i class="material-icons" >search</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </nav>

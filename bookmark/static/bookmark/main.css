@@ -19,6 +19,11 @@ body {
     text-transform: uppercase;
 }
 
+/* search bar */
+#bootstrap-overrides #search {
+    width: 100%;
+}
+
 /* common attributes for search form and button */
 #bootstrap-overrides .form-control,
 #bootstrap-overrides .input-group-append {
