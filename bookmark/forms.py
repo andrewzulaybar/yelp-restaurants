@@ -25,3 +25,7 @@ class DeleteForm(forms.ModelForm):
     class Meta:
         model = Restaurant
         fields = {'business_id'}
+
+
+class SearchForm(forms.Form):
+    search_term = forms.CharField(max_length=200)

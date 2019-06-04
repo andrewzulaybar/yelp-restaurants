@@ -45,7 +45,7 @@ class AddToVisitedView(FormView):
             if r.visited:
                 # Object is already in visited, display warning message and redirect user to home page
                 messages.warning(self.request, f'{name} is already in your visited list!')
-                return redirect('bookmark-home')
+                return redirect(self.request.META.get('HTTP_REFERER'))
             else:
                 # Object is in bookmarks, move to visited and remove from bookmarks
                 r.visited = True

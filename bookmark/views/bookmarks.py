@@ -65,9 +65,9 @@ class AddToBookmarksView(FormView):
             messages.success(self.request, f'Added {name} to bookmarks!')
 
         # Redirect user to home page
-        return redirect('bookmark-home')
+        return redirect(self.request.META.get('HTTP_REFERER'))
 
     def form_invalid(self, form):
         # Display error message and redirect user to home page
         messages.error(self.request, 'An error occurred! Please try again later.', extra_tags='danger')
-        return redirect('bookmark-home')
+        return redirect(self.request.META.get('HTTP_REFERER'))

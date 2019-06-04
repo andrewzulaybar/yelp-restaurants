@@ -43,7 +43,7 @@
                     <form action="{% url 'search' %}" method="post" id="search">
                         {% csrf_token %}
                         <div class="input-group">
-                            <input class="form-control" type="search" placeholder="Search">
+                            <input class="form-control" type="search" placeholder="Search" name="search_term">
                             <div class="input-group-append">
                                 <button class="btn" type="submit">
                                     <i class="material-icons" >search</i>
