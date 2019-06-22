@@ -16,25 +16,31 @@
         <!-- Sidebar -->
         <div class="d-none d-sm-block col-sm-4 col-md-3 col-lg-2">
             <div class="btn-block p-2 text-center" id="sort-by">Sort by...</div>
-            <form action="{% url 'sort-by-distance' %}" method="get">
+            <form action="{% url 'bookmarks' %}" method="get">
+                <input type="hidden" name="sort_by" value="Distance">
                 <input type="submit" class="btn btn-middle btn-block" value="Distance">
             </form>
-            <form action="{% url 'sort-by-popularity' %}" method="get">
+            <form action="{% url 'bookmarks' %}" method="get">
+                <input type="hidden" name="sort_by" value="Popularity">
                 <input type="submit" class="btn btn-middle btn-block" value="Popularity">
             </form>
-            <form action="{% url 'sort-by-rating' %}" method="get">
+            <form action="{% url 'bookmarks' %}" method="get">
+                <input type="hidden" name="sort_by" value="Rating">
                 <input type="submit" class="btn btn-middle btn-block" value="Rating">
             </form>
-            <form action="{% url 'sort-by-cuisine' %}" method="get">
+            <form action="{% url 'bookmarks' %}" method="get">
+                <input type="hidden" name="sort_by" value="Cuisine">
                 <input type="submit" class="btn btn-middle btn-block" value="Cuisine">
             </form>
-            <form action="{% url 'sort-by-price' %}" method="get">
+            <form action="{% url 'bookmarks' %}" method="get">
+                <input type="hidden" name="sort_by" value="Price">
                 <input type="submit" class="btn btn-middle btn-block" value="Price">
             </form>
-            <form action="{% url 'is-open-now' %}" method="get">
+            <form action="{% url 'bookmarks' %}" method="get">
+                <input type="hidden" name="sort_by" value="Open Now">
                 <input type="submit" class="btn btn-middle btn-block" value="Open Now">
             </form>
-            <form action="{% url 'bookmark-bookmarks' %}" method="get">
+            <form action="{% url 'bookmarks' %}" method="get">
                 <input type="submit" class="btn btn-bottom btn-block" value="Date Added">
             </form>
         </div>

@@ -29,3 +29,7 @@ class DeleteForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     search_term = forms.CharField(max_length=200)
+
+
+class SortByForm(forms.Form):
+    sort_by = forms.CharField(max_length=20)
