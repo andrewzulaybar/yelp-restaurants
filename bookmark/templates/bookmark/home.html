@@ -33,18 +33,7 @@
             </div>
             <!-- Card footer -->
             {% block footer %}
-            <div class="card-footer p-2">
-                <!-- Visited form -->
-                <form action="{% url 'add-to-visited' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="name" value="{{ restaurant.name }}">
-                    <input type="hidden" name="business_id" value="{{ restaurant.id }}">
-                    <input type="hidden" name="visited" value="True">
-                    <input type="hidden" name="bookmark" value="False">
-                    {% block visited_button %}
-                        <input type="submit" class="btn-sm btn-primary float-left" value="Visited">
-                    {% endblock visited_button %}
-                </form>
+            <div class="card-footer p-0">
                 <!-- Bookmark form -->
                 <form action="{% url 'add-to-bookmarks' %}" method="post">
                     {% csrf_token %}
@@ -53,8 +42,19 @@
                     <input type="hidden" name="visited" value="False">
                     <input type="hidden" name="bookmark" value="True">
                     {% block bookmark_button %}
-                        <input type="submit" class="btn-sm btn-primary float-right" value="Bookmark">
+                        <input type="submit" class="btn-sm btn-primary float-left"  id="home-page-bookmark" value="Bookmark">
                     {% endblock bookmark_button %}
+                </form>
+                <!-- Visited form -->
+                <form action="{% url 'add-to-visited' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="name" value="{{ restaurant.name }}">
+                    <input type="hidden" name="business_id" value="{{ restaurant.id }}">
+                    <input type="hidden" name="visited" value="True">
+                    <input type="hidden" name="bookmark" value="False">
+                    {% block visited_button %}
+                        <input type="submit" class="btn-sm btn-primary float-right" id="home-page-visited" value="Visited">
+                    {% endblock visited_button %}
                 </form>
             </div>
             {% endblock footer %}

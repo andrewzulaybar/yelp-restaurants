@@ -6,8 +6,9 @@ body {
 /***** navigation bar *****/
 
 /* navbar */
-#bootstrap-overrides .navbar {
+.navbar {
     background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 15px rgba(229, 229, 229, 0.75);
 }
 
 /* navbar links */
@@ -20,25 +21,25 @@ body {
 }
 
 /* search bar */
-#bootstrap-overrides #search {
+#search {
     width: 100%;
 }
 
 /* common attributes for search form and button */
-#bootstrap-overrides .form-control,
-#bootstrap-overrides .input-group-append {
+.form-control,
+.input-group-append {
     background-color: rgba(51, 51, 51, 0.1);
     border-color: rgba(51, 51, 51, 0.1);
     color: rgba(51, 51, 51, 0.75);
 }
 
 /* search form */
-#bootstrap-overrides .form-control {
+.form-control {
     border-radius: 20px 0px 0px 20px;
 }
 
 /* search button */
-#bootstrap-overrides .input-group-append {
+.input-group-append {
     border-radius: 0px 20px 20px 0px;
     height: 38px;
     left: 1px;
@@ -47,40 +48,56 @@ body {
 
 /***** main content *****/
 
-#bootstrap-overrides .card-image-top {
-    border-radius: 15px 15px 0px 0px;
+/* main div */
+main {
+    margin-top: 15px;
+}
+
+/* card image */
+.card-image-top {
+    border-radius: 13px 13px 0px 0px;
     height: 150px;
     object-fit: cover;
 }
 
-/* common attributes for alerts and cards */
-#bootstrap-overrides .alert,
-#bootstrap-overrides .card {
+/* alerts */
+.alert {
     border-radius: 15px;
 }
 
 /* card */
-#bootstrap-overrides .card {
+.card {
     background-color: white;
-    color: rgba(51, 51, 51, 1);
+    border-radius: 15px;
+    color: rgba(51, 51, 51, 0.75);
+    box-shadow: 0px 0px 15px rgba(229, 229, 229, 0.75);
+    border: 2px solid rgba(229, 229, 229, 0.75);
 }
 
 /* common attributes for card title and subtitle */
-#bootstrap-overrides .card-title,
-#bootstrap-overrides .card-subtitle {
+.card-title,
+.card-subtitle {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+/* card title */
+.card-title {
+    color: rgba(51, 51, 51, 0.75);
+    font-size: 20px;
+    font-weight: 500;
+}
+
 /* card subtitle */
-#bootstrap-overrides .card-subtitle {
-    color: gray;
+.card-subtitle {
+    color: rgba(51, 51, 51, 0.40);
     font-weight: normal;
+    font-size: 16px;
 }
 
 /* card close button */
-#bootstrap-overrides .close {
+.close {
     background-color: transparent;
     border-width: 0px;
     box-shadow: none;
@@ -90,75 +107,105 @@ body {
 
 /* card footer */
 #bootstrap-overrides .card-footer {
-    border-bottom-width: 0px;
-    border-radius: 0px 0px 15px 15px;
+    border-width: 0px;
+    height: 30px;
+    border-radius: 0px 0px 13px 13px;
 }
 
 /* bookmark and visited buttons */
-#bootstrap-overrides .btn-sm {
-    background-color: transparent;
-    border-color: rgba(51, 51, 51, 0.7);
-    border-radius: 20px;
-    color: rgba(51, 51, 51, 0.7);
-    font-size: 12px;
+.btn-sm {
+    background: rgba(229, 229, 229, 0.25);
+    border-color: rgba(229, 229, 229, 0.5);
+    border-top-width: 2px;
+    border-bottom-width: 0px;
+    color: rgba(51, 51, 51, 0.40);
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
+    width: 50%;
+    height: 100%;
+}
+
+/* home page bookmark button */
+#home-page-bookmark {
+    border-left-width: 0px;
+    border-radius: 0px 0px 0px 13px;
+}
+
+/* home page visited button */
+#home-page-visited {
+    border-right-width: 0px;
+    border-radius: 0px 0px 13px 0px;
 }
 
 /* focus state of bookmark and visited buttons */
-#bootstrap-overrides .btn-sm:focus {
+.btn-sm:focus,
+#home-page-bookmark:focus,
+#home-page-visited:focus {
     outline: none;
+}
+
+/* bookmarks page visited button */
+#bookmarks-visited {
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-radius: 0px 0px 13px 13px;
 }
 
 /***** bookmarks sidebar *****/
 
-/* sidebar card header */
-#bootstrap-overrides #sort-by.card-header{
+/* sidebar header */
+#sort-by {
+    background: rgba(229, 229, 229, 0.7);
+    border-radius: 13px 13px 0px 0px;
+    border-color: rgba(229, 229, 229, 0.5);
+    border-width: 2px;
+    color: rgba(51, 51, 51, 0.40);
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 
-/* common attributes of sort-by buttons in bookmarks */
-#bootstrap-overrides .btn-bottom,
-#bootstrap-overrides .btn-middle,
-#bootstrap-overrides .btn-top {
-    background-color: transparent;
-    border-color: rgba(51, 51, 51, 0.7);
-    color: rgba(51, 51, 51, 0.7);
-    font-size: 12px;
+/* sidebar buttons */
+.btn-bottom,
+.btn-middle {
+    background: rgba(229, 229, 229, 0.25);
+    border-color: rgba(229, 229, 229, 0.5);
+    border-width: 2px;
+    color: rgba(51, 51, 51, 0.40);
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 
+/* sidebar buttons on hover */
+.btn-bottom:hover,
+.btn-middle:hover {
+    color: rgba(51, 51, 51, 0.75);
+}
+
 /* bottom sidebar button */
-#bootstrap-overrides .btn-bottom {
+.btn-bottom {
     border-radius: 0px 0px 15px 15px;
     border-top: none;
 }
 
 /* middle sidebar buttons */
-#bootstrap-overrides .btn-middle {
+.btn-middle {
     border-radius: 0px;
     border-top: none;
 }
 
-/* top sidebar button */
-#bootstrap-overrides .btn-top {
-    border-radius: 15px 15px 0px 0px;
-}
-
-/* active state of sort-by buttons in bookmarks */
-#bootstrap-overrides .btn-bottom:active,
-#bootstrap-overrides .btn-middle:active,
-#bootstrap-overrides .btn-top:active {
+/* active state of sidebar buttons in bookmarks */
+.btn-bottom:active,
+.btn-middle:active {
     outline: none;
 }
 
 /* sidebar left gutter */
-#bootstrap-overrides .card.sidebar {
+.card.sidebar {
     margin-left: -15px;
 }
