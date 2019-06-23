@@ -13,23 +13,25 @@
             <div class="card-body">
                 {% block close_button %}{% endblock close_button %}
                 <h5 class="card-title">{{ restaurant.name }}</h5>
-                <h6 class="card-subtitle">
-                    {% with restaurant.location.address1 as address %}
-                    {% with restaurant.categories.0.title as category %}
-                    {% with restaurant.price as price %}
-                        {{ address }}
-                        {% if address and category or address and price %}
-                            &#8226;
-                        {% endif %}
-                        {{ category }}
-                        {% if category and price %}
-                            &#8226;
-                        {% endif %}
-                        {{ restaurant.price }}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                </h6>
+                {% block subtitle %}
+                    <h6 class="card-subtitle">
+                        {% with restaurant.location.address1 as address %}
+                        {% with restaurant.categories.0.title as category %}
+                        {% with restaurant.price as price %}
+                            {{ address }}
+                            {% if address and category or address and price %}
+                                &#8226;
+                            {% endif %}
+                            {{ category }}
+                            {% if category and price %}
+                                &#8226;
+                            {% endif %}
+                            {{ restaurant.price }}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                    </h6>
+                {% endblock subtitle %}
             </div>
             <!-- Card footer -->
             {% block footer %}

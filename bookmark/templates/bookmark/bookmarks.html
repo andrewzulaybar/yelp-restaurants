@@ -8,7 +8,6 @@
             {% block alerts %}
                 {{ block.super }}
             {% endblock alerts %}
-            <!-- Content -->
             {% block content %}
                 {{ block.super }}
             {% endblock content %}
@@ -46,6 +45,22 @@
         </div>
     </div>
 {% endblock main %}
+
+<!-- Subtitle -->
+{% block subtitle %}
+    <h6 class="card-subtitle">
+        {% with restaurant.address as address %}
+        {% with restaurant.categories.0.title as category %}
+        {% with restaurant.price as price %}
+            {{ address }} &#8226; {{ category }}
+            {% if price is not None %}
+                &#8226; {{ price }}
+            {% endif %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+    </h6>
+{% endblock subtitle %}
 
 <!-- Close button -->
 {% block close_button %}

@@ -41,6 +41,12 @@ class Location(models.Model):
         unique_together = (('address', 'postal_code'),)
 
 
+class RestaurantManager(models.Manager):
+    def create_restaurant(self, business_id, name, rating, review_count, price, phone, image_url, yelp_url, location):
+        return self.create(business_id=business_id, name=name, rating=rating, review_count=review_count, price=price,
+                           phone=phone, image_url=image_url, yelp_url=yelp_url, location=location)
+
+
 class Restaurant(models.Model):
     business_id = models.CharField(max_length=100, primary_key=True)
     name = models.CharField(max_length=50)
@@ -50,6 +56,14 @@ class Restaurant(models.Model):
     phone = models.CharField(max_length=12, blank=True, null=True)
     image_url = models.CharField(max_length=300, blank=True, null=True)
     yelp_url = models.CharField(max_length=300)
+    location = models.ForeignKey(
+        'Location',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+
+    objects = RestaurantManager()
 
 
 class RestaurantHasCategoryManager(models.Manager):

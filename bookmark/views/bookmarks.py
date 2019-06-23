@@ -57,14 +57,38 @@ class BookmarksListView(BookmarksMixin, ListView):
     def get_bookmarks(self, context):
         context['title'] = 'Bookmarks'
 
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
+        # Retrieve bookmark objects
+        restaurants = Bookmarks.objects.raw(
+            ''' SELECT * 
+                FROM bookmark_Bookmarks b
+                INNER JOIN bookmark_Restaurant r on b.restaurant_id = r.business_id
+                INNER JOIN bookmark_Location l on r.location_id = l.id 
+                ORDER BY date DESC '''
+        )
 
-        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
+        # Format restaurants for template
+        bookmarks = []
         for restaurant in restaurants:
-            if restaurant.bookmark:
-                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
-                bookmarks.append(r)
+            res = {
+                'business_id': restaurant.business_id,
+                'name': restaurant.name,
+                'address': restaurant.address,
+                'rating': restaurant.rating,
+                'review_count': restaurant.review_count,
+                'price': restaurant.price,
+                'phone': restaurant.phone,
+                'image_url': restaurant.image_url,
+                'yelp_url': restaurant.yelp_url,
+                'location': restaurant.address,
+                'categories': Restaurant.objects.raw(
+                    ''' SELECT *
+                        FROM bookmark_Restaurant r
+                        INNER JOIN bookmark_RestaurantHasCategory rhc ON r.business_id = rhc.restaurant_id
+                        INNER JOIN bookmark_Category c ON rhc.category_id = c.title
+                        WHERE r.business_id = '%s' ''' % restaurant.business_id
+                )
+            }
+            bookmarks.append(res)
 
         context[self.context_object_name] = bookmarks
         return context
@@ -201,12 +225,9 @@ class AddToBookmarksView(FormView):
         category_form = CategoryForm(request.POST, prefix='category')
         location_form = LocationForm(request.POST, prefix='location')
 
-        if bookmark_form.is_valid():
-            self.bookmark_form_valid(bookmark_form)
-            # Process category and location forms only when bookmark form is valid
-            if category_form.is_valid() and location_form.is_valid():
-                self.category_form_valid(category_form, bookmark_form)
-                self.location_form_valid(location_form)
+        if bookmark_form.is_valid() and category_form.is_valid() and location_form.is_valid():
+            self.bookmark_and_location_form_valid(bookmark_form, location_form)
+            self.category_form_valid(category_form, bookmark_form)
         else:
             name = bookmark_form['name'].value()
             business_id = bookmark_form['business_id'].value()
@@ -229,14 +250,27 @@ class AddToBookmarksView(FormView):
 
         return redirect(self.request.META.get('HTTP_REFERER'))
 
-    def bookmark_form_valid(self, bookmark_form):
-        name = bookmark_form.cleaned_data.get('name')
+    def bookmark_and_location_form_valid(self, bookmark_form, location_form):
         business_id = bookmark_form.cleaned_data.get('business_id')
+        name = bookmark_form.cleaned_data.get('name')
+        rating = bookmark_form.cleaned_data.get('rating')
+        review_count = bookmark_form.cleaned_data.get('rating')
+        price = bookmark_form.cleaned_data.get('price')
+        phone = bookmark_form.cleaned_data.get('phone')
+        image_url = bookmark_form.cleaned_data.get('image_url')
+        yelp_url = bookmark_form.cleaned_data.get('yelp_url')
+        address = location_form.cleaned_data.get('address')
+        postal_code = location_form.cleaned_data.get('postal_code')
+
+        # Save location if not already in Location relation
+        if not Location.objects.filter(address=address, postal_code=postal_code).exists():
+            location_form.save()
 
         # Save restaurant and create bookmark if not already in Restaurant relation
         if not Restaurant.objects.filter(pk=business_id).exists():
-            bookmark_form.save()
-            restaurant = Restaurant.objects.filter(pk=business_id).get()
+            loc = Location.objects.get(address=address, postal_code=postal_code)
+            restaurant = Restaurant.objects.create_restaurant(business_id, name, rating, review_count,
+                                                              price, phone, image_url, yelp_url, loc)
             Bookmarks.objects.create_bookmark(date=datetime.datetime.now(), restaurant=restaurant).save()
             messages.success(self.request, f'Added {name} to bookmarks!')
 
@@ -256,12 +290,3 @@ class AddToBookmarksView(FormView):
             category = Category.objects.filter(title=title, alias=alias)[0]
             if not RestaurantHasCategory.objects.filter(restaurant=restaurant, category=category).exists():
                 RestaurantHasCategory.objects.create_object(restaurant, category).save()
-
-    @staticmethod
-    def location_form_valid(location_form):
-        address = location_form.cleaned_data.get('address')
-        postal_code = location_form.cleaned_data.get('postal_code')
-
-        # Save location if not already in Location relation
-        if not Location.objects.filter(address=address, postal_code=postal_code).exists():
-            location_form.save()

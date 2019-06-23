@@ -6,7 +6,7 @@ from bookmark.models import *
 class BookmarkForm(forms.ModelForm):
     class Meta:
         model = Restaurant
-        fields = "__all__"
+        fields = {'business_id', 'name', 'rating', 'review_count', 'price', 'phone', 'image_url', 'yelp_url'}
 
 
 class CategoryForm(forms.Form):
