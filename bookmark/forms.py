@@ -1,22 +1,16 @@
 from django import forms
 
-from bookmark.models import Restaurant
-
-
-class VisitedForm(forms.ModelForm):
-    name = forms.CharField(max_length=100)
-
-    class Meta:
-        model = Restaurant
-        fields = "__all__"
+from bookmark.models import *
 
 
 class BookmarkForm(forms.ModelForm):
-    name = forms.CharField(max_length=100)
-
     class Meta:
         model = Restaurant
         fields = "__all__"
+
+
+class CategoryForm(forms.Form):
+    categories = forms.CharField(max_length=200)
 
 
 class DeleteForm(forms.ModelForm):
@@ -27,9 +21,23 @@ class DeleteForm(forms.ModelForm):
         fields = {'business_id'}
 
 
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = "__all__"
+
+
 class SearchForm(forms.Form):
     search_term = forms.CharField(max_length=200)
 
 
 class SortByForm(forms.Form):
     sort_by = forms.CharField(max_length=20)
+
+
+class VisitedForm(forms.ModelForm):
+    name = forms.CharField(max_length=100)
+
+    class Meta:
+        model = Restaurant
+        fields = "__all__"

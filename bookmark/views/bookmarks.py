@@ -1,11 +1,13 @@
+import ast
+import datetime
 from django.contrib import messages
 from django.core import exceptions
 from django.shortcuts import redirect
 from django.views.generic import FormView, ListView
 
 from bookmark.api import location, yelp_api
-from bookmark.forms import BookmarkForm, SortByForm
-from bookmark.models import Restaurant
+from bookmark.forms import *
+from bookmark.models import *
 
 
 class BookmarksMixin(object):
@@ -168,19 +170,24 @@ class BookmarksListView(BookmarksMixin, ListView):
         context[self.context_object_name] = bookmarks
         return context
 
-    def __distance(self, elem):
+    @staticmethod
+    def __distance(elem):
         return elem['distance']
 
-    def __popularity(self, elem):
+    @staticmethod
+    def __popularity(elem):
         return elem['review_count']
 
-    def __rating(self, elem):
+    @staticmethod
+    def __rating(elem):
         return elem['rating']
 
-    def __cuisine(self, elem):
+    @staticmethod
+    def __cuisine(elem):
         return elem['categories'][0]['title']
 
-    def __price(self, elem):
+    @staticmethod
+    def __price(elem):
         try:
             return elem['price']
         except KeyError:
@@ -188,31 +195,73 @@ class BookmarksListView(BookmarksMixin, ListView):
 
 
 class AddToBookmarksView(FormView):
-    form_class = BookmarkForm
+    def post(self, request, *args, **kwargs):
+        # Process bookmark, category, and location forms
+        bookmark_form = BookmarkForm(request.POST, prefix='bookmark')
+        category_form = CategoryForm(request.POST, prefix='category')
+        location_form = LocationForm(request.POST, prefix='location')
 
-    def form_valid(self, form):
-        # Save name and business_id
-        name = form.cleaned_data.get('name')
-        business_id = form.cleaned_data.get('business_id')
+        if bookmark_form.is_valid():
+            self.bookmark_form_valid(bookmark_form)
+            # Process category and location forms only when bookmark form is valid
+            if category_form.is_valid() and location_form.is_valid():
+                self.category_form_valid(category_form, bookmark_form)
+                self.location_form_valid(location_form)
+        else:
+            name = bookmark_form['name'].value()
+            business_id = bookmark_form['business_id'].value()
 
-        # Attempt retrieval of object from database
-        try:
-            r = Restaurant.objects.filter(business_id=business_id).get()
-            if r.bookmark:
-                # Object is already in bookmarks, display warning message
-                messages.warning(self.request, f'{name} is already in your bookmarks list!')
-            else:
-                # Object is in visited, display warning message
-                messages.warning(self.request, f'{name} is in your visited list!')
-        except exceptions.ObjectDoesNotExist:
-            # Object does not yet exist, save to database and display success message
-            form.save()
+            # Attempt retrieval of object from Restaurant relation
+            try:
+                restaurant = Restaurant.objects.filter(pk=business_id).get()
+                if Bookmarks.objects.filter(restaurant=restaurant).exists():
+                    # Object is already in bookmarks, display warning message
+                    messages.warning(self.request, f'{name} is already in your bookmarks!')
+                elif Visited.objects.filter(restaurant=restaurant).exists():
+                    # Object is already in visited, display warning message
+                    messages.warning(self.request, f'{name} is in your visited list!')
+                else:
+                    # Display error message, look into problem
+                    messages.error(self.request, 'An error occured! Please try again later.', extra_tags='danger')
+            except exceptions.ObjectDoesNotExist:
+                # Display error message, look into problem
+                messages.error(self.request, 'An error occured! Please try again later.', extra_tags='danger')
+
+        return redirect(self.request.META.get('HTTP_REFERER'))
+
+    def bookmark_form_valid(self, bookmark_form):
+        name = bookmark_form.cleaned_data.get('name')
+        business_id = bookmark_form.cleaned_data.get('business_id')
+
+        # Save restaurant and create bookmark if not already in Restaurant relation
+        if not Restaurant.objects.filter(pk=business_id).exists():
+            bookmark_form.save()
+            restaurant = Restaurant.objects.filter(pk=business_id).get()
+            Bookmarks.objects.create_bookmark(date=datetime.datetime.now(), restaurant=restaurant).save()
             messages.success(self.request, f'Added {name} to bookmarks!')
 
-        # Redirect user to home page
-        return redirect(self.request.META.get('HTTP_REFERER'))
+    @staticmethod
+    def category_form_valid(category_form, bookmark_form):
+        categories = ast.literal_eval(category_form.cleaned_data.get('categories'))
+        business_id = bookmark_form.cleaned_data.get('business_id')
 
-    def form_invalid(self, form):
-        # Display error message and redirect user to home page
-        messages.error(self.request, 'An error occurred! Please try again later.', extra_tags='danger')
-        return redirect(self.request.META.get('HTTP_REFERER'))
+        for category in categories:
+            # Save category if not already in Category relation
+            title = category['title']
+            alias = category['alias']
+            if not Category.objects.filter(title=title, alias=alias).exists():
+                Category.objects.create_category(title=title, alias=alias).save()
+            # Save (business_id, category) pair if not already in RestaurantHasCategory relation
+            restaurant = Restaurant.objects.filter(pk=business_id)[0]
+            category = Category.objects.filter(title=title, alias=alias)[0]
+            if not RestaurantHasCategory.objects.filter(restaurant=restaurant, category=category).exists():
+                RestaurantHasCategory.objects.create_object(restaurant, category).save()
+
+    @staticmethod
+    def location_form_valid(location_form):
+        address = location_form.cleaned_data.get('address')
+        postal_code = location_form.cleaned_data.get('postal_code')
+
+        # Save location if not already in Location relation
+        if not Location.objects.filter(address=address, postal_code=postal_code).exists():
+            location_form.save()
