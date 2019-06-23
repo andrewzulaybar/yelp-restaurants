@@ -13,12 +13,9 @@ class CategoryForm(forms.Form):
     categories = forms.CharField(max_length=200)
 
 
-class DeleteForm(forms.ModelForm):
-    name = forms.CharField(max_length=100)
-
-    class Meta:
-        model = Restaurant
-        fields = {'business_id'}
+class DeleteForm(forms.Form):
+    business_id = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=50)
 
 
 class LocationForm(forms.ModelForm):
