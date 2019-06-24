@@ -67,7 +67,8 @@
     <form action="{% url 'delete' %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="name" value="{{ restaurant.name }}">
-        <input type="hidden" name="business_id" value="{{ restaurant.business_id }}">
+        <input type="hidden" name="location_id" value="{{ restaurant.location_id }}">
+        <input type="hidden" name="categories" value="{{ restaurant.categories }}">
         <input type="submit" class="close" value="&times;">
     </form>
 {% endblock close_button %}

@@ -69,24 +69,31 @@ class BookmarksListView(BookmarksMixin, ListView):
         # Format restaurants for template
         bookmarks = []
         for restaurant in restaurants:
+            # Retrieve categories for restaurant
+            categories = []
+            all_categories = Category.objects.raw(
+                ''' SELECT *
+                    FROM bookmark_Restaurant r
+                    INNER JOIN bookmark_RestaurantHasCategory rhc ON r.business_id = rhc.restaurant_id
+                    INNER JOIN bookmark_Category c ON rhc.category_id = c.title
+                    WHERE r.business_id = '%s' ''' % restaurant.business_id
+            )
+            for category in all_categories:
+                categories.append(category.title)
+
+            # Setup context for template
             res = {
                 'business_id': restaurant.business_id,
                 'name': restaurant.name,
-                'address': restaurant.address,
                 'rating': restaurant.rating,
                 'review_count': restaurant.review_count,
                 'price': restaurant.price,
                 'phone': restaurant.phone,
                 'image_url': restaurant.image_url,
                 'yelp_url': restaurant.yelp_url,
-                'location': restaurant.address,
-                'categories': Restaurant.objects.raw(
-                    ''' SELECT *
-                        FROM bookmark_Restaurant r
-                        INNER JOIN bookmark_RestaurantHasCategory rhc ON r.business_id = rhc.restaurant_id
-                        INNER JOIN bookmark_Category c ON rhc.category_id = c.title
-                        WHERE r.business_id = '%s' ''' % restaurant.business_id
-                )
+                'location_id': restaurant.location_id,
+                'address': restaurant.address,
+                'categories': categories
             }
             bookmarks.append(res)
 
@@ -224,6 +231,9 @@ class AddToBookmarksView(FormView):
         bookmark_form = BookmarkForm(request.POST, prefix='bookmark')
         category_form = CategoryForm(request.POST, prefix='category')
         location_form = LocationForm(request.POST, prefix='location')
+
+        if bookmark_form.is_valid() and location_form.is_valid():
+            self.bookmark_and_location_form_valid(bookmark_form, location_form)
 
         if bookmark_form.is_valid() and category_form.is_valid() and location_form.is_valid():
             self.bookmark_and_location_form_valid(bookmark_form, location_form)
