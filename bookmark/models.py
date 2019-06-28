@@ -28,6 +28,15 @@ class Category(models.Model):
     objects = CategoryManager()
 
 
+class LocationManager(models.Manager):
+    def create_location(self, location):
+        return self.create(
+            address=location['address'], city=location['city'], province=location['province'],
+            country=location['country'], postal_code=location['postal_code'],
+            latitude=location['latitude'], longitude=location['longitude']
+        )
+
+
 class Location(models.Model):
     address = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
@@ -40,11 +49,16 @@ class Location(models.Model):
     class Meta:
         unique_together = (('address', 'postal_code'),)
 
+    objects = LocationManager()
+
 
 class RestaurantManager(models.Manager):
-    def create_restaurant(self, business_id, name, rating, review_count, price, phone, image_url, yelp_url, location):
-        return self.create(business_id=business_id, name=name, rating=rating, review_count=review_count, price=price,
-                           phone=phone, image_url=image_url, yelp_url=yelp_url, location=location)
+    def create_restaurant(self, restaurant):
+        return self.create(
+            business_id=restaurant['business_id'], name=restaurant['name'], rating=restaurant['rating'],
+            review_count=restaurant['review_count'], price=restaurant['price'], phone=restaurant['phone'],
+            image_url=restaurant['image_url'], yelp_url=restaurant['yelp_url'], location=restaurant['location']
+        )
 
 
 class Restaurant(models.Model):

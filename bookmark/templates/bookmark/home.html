@@ -40,14 +40,14 @@
                 <form action="{% url 'add-to-bookmarks' %}" method="post">
                     {% csrf_token %}
                     <!-- Restaurant -->
-                    <input type="hidden" name="bookmark-business_id" value="{{ restaurant.id }}">
-                    <input type="hidden" name="bookmark-name" value="{{ restaurant.name }}">
-                    <input type="hidden" name="bookmark-rating" value="{{ restaurant.rating }}">
-                    <input type="hidden" name="bookmark-review_count" value="{{ restaurant.review_count }}">
-                    <input type="hidden" name="bookmark-price" value="{{ restaurant.price }}">
-                    <input type="hidden" name="bookmark-phone" value="{{ restaurant.phone }}">
-                    <input type="hidden" name="bookmark-image_url" value="{{ restaurant.image_url }}">
-                    <input type="hidden" name="bookmark-yelp_url" value="{{ restaurant.url }}">
+                    <input type="hidden" name="restaurant-business_id" value="{{ restaurant.id }}">
+                    <input type="hidden" name="restaurant-name" value="{{ restaurant.name }}">
+                    <input type="hidden" name="restaurant-rating" value="{{ restaurant.rating }}">
+                    <input type="hidden" name="restaurant-review_count" value="{{ restaurant.review_count }}">
+                    <input type="hidden" name="restaurant-price" value="{{ restaurant.price }}">
+                    <input type="hidden" name="restaurant-phone" value="{{ restaurant.phone }}">
+                    <input type="hidden" name="restaurant-image_url" value="{{ restaurant.image_url }}">
+                    <input type="hidden" name="restaurant-yelp_url" value="{{ restaurant.url }}">
                     <!-- Categories -->
                     <input type="hidden" name="category-categories" value="{{ restaurant.categories }}">
                     <!-- Location -->
