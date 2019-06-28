@@ -14,6 +14,7 @@ class CategoryForm(forms.Form):
 
 
 class DeleteForm(forms.Form):
+    business_id = forms.CharField(max_length=100)
     name = forms.CharField(max_length=50)
     location_id = forms.CharField(max_length=10)
     categories = forms.CharField(max_length=200)

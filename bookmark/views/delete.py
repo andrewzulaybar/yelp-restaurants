@@ -21,6 +21,7 @@ class DeleteView(FormView):
         return redirect(self.request.META.get('HTTP_REFERER'))
 
     def form_valid(self, form):
+        business_id = form.cleaned_data.get('business_id')
         name = form.cleaned_data.get('name')
         location_id = form.cleaned_data.get('location_id')
         categories = ast.literal_eval(form.cleaned_data.get('categories'))
@@ -36,6 +37,8 @@ class DeleteView(FormView):
         restaurants_at_location = Restaurant.objects.filter(location_id=location_id)
         if len(restaurants_at_location) == 1:
             Location.objects.filter(id=location_id).delete()
+        else:
+            Restaurant.objects.filter(business_id=business_id)
 
         messages.success(self.request, f'Successfully deleted {name}!')
         return redirect(self.request.META.get('HTTP_REFERER'))
