@@ -1,11 +1,6 @@
-from django.contrib import messages
-from django.core import exceptions
-from django.shortcuts import redirect
-from django.views.generic import FormView, ListView
+from django.views.generic import ListView
 
-from bookmark.api import location, yelp_api
-from bookmark.forms import VisitedForm
-from bookmark.models import Restaurant
+from bookmark.models import *
 
 
 class VisitedListView(ListView):
@@ -15,51 +10,50 @@ class VisitedListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(VisitedListView, self).get_context_data(**kwargs)
+        return self.get_visited(context)
+
+    def get_visited(self, context):
         context['title'] = 'Visited'
 
-        # Additional parameters
-        params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}
+        # Retrieve visited objects
+        restaurants = Visited.objects.raw(
+            ''' SELECT * 
+                FROM bookmark_Visited v
+                INNER JOIN bookmark_Restaurant r on v.restaurant_id = r.business_id
+                INNER JOIN bookmark_Location l on r.location_id = l.id '''
+        )
 
-        # If restaurants in database have been visited, pull data from Yelp Fusion API
+        # Format restaurants for template
         visited = []
-        restaurants = Restaurant.objects.all()
         for restaurant in restaurants:
-            if restaurant.visited:
-                restaurant = yelp_api.get("v3/businesses/" + restaurant.business_id, params)
-                visited.append(restaurant)
+            # Retrieve categories for restaurant
+            categories = []
+            all_categories = Category.objects.raw(
+                ''' SELECT *
+                    FROM bookmark_Restaurant r
+                    INNER JOIN bookmark_RestaurantHasCategory rhc ON r.business_id = rhc.restaurant_id
+                    INNER JOIN bookmark_Category c ON rhc.category_id = c.title
+                    WHERE r.business_id = '%s' ''' % restaurant.business_id
+            )
+            for category in all_categories:
+                categories.append(category.title)
 
-        context['restaurants'] = visited
+            # Setup context for template
+            res = {
+                'business_id': restaurant.business_id,
+                'name': restaurant.name,
+                'rating': restaurant.rating,
+                'review_count': restaurant.review_count,
+                'price': restaurant.price,
+                'phone': restaurant.phone,
+                'image_url': restaurant.image_url,
+                'yelp_url': restaurant.yelp_url,
+                'location_id': restaurant.location_id,
+                'address': restaurant.address,
+                'categories': categories
+            }
+            visited.append(res)
+
+        context[self.context_object_name] = visited
         return context
 
-
-class AddToVisitedView(FormView):
-    form_class = VisitedForm
-
-    def form_valid(self, form):
-        name = form.cleaned_data.get('name')
-        business_id = form.cleaned_data.get('business_id')
-
-        # Attempt retrieval of object from database
-        try:
-            r = Restaurant.objects.filter(business_id=business_id).get()
-            if r.visited:
-                # Object is already in visited, display warning message and redirect user to home page
-                messages.warning(self.request, f'{name} is already in your visited list!')
-                return redirect(self.request.META.get('HTTP_REFERER'))
-            else:
-                # Object is in bookmarks, move to visited and remove from bookmarks
-                r.visited = True
-                r.bookmark = False
-                r.save()
-        except exceptions.ObjectDoesNotExist:
-            # Object does not yet exist, save to database
-            form.save()
-
-        # Display success message and redirect user to previous page
-        messages.success(self.request, f'Added {name} to visited!')
-        return redirect(self.request.META.get('HTTP_REFERER'))
-
-    def form_invalid(self, form):
-        # Display error message and redirect user to previous page
-        messages.error(self.request, 'An error occurred! Please try again later.', extra_tags='danger')
-        return redirect(self.request.META.get('HTTP_REFERER'))

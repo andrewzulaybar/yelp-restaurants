@@ -1,11 +1,29 @@
 {% extends "bookmark/home.html" %}
 
+<!-- Subtitle -->
+{% block subtitle %}
+    <h6 class="card-subtitle">
+        {% with restaurant.address as address %}
+        {% with restaurant.categories.0.title as category %}
+        {% with restaurant.price as price %}
+            {{ address }} &#8226; {{ category }}
+            {% if price is not None %}
+                &#8226; {{ price }}
+            {% endif %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+    </h6>
+{% endblock subtitle %}
+
 <!-- Close button -->
 {% block close_button %}
     <form action="{% url 'delete' %}" method="post">
         {% csrf_token %}
+        <input type="hidden" name="business_id" value="{{ restaurant.business_id }}">
         <input type="hidden" name="name" value="{{ restaurant.name }}">
-        <input type="hidden" name="business_id" value="{{ restaurant.id }}">
+        <input type="hidden" name="location_id" value="{{ restaurant.location_id }}">
+        <input type="hidden" name="categories" value="{{ restaurant.categories }}">
         <input type="submit" class="close" value="&times;">
     </form>
 {% endblock close_button %}
