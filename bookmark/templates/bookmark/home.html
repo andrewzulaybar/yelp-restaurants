@@ -92,4 +92,39 @@
             {% endblock footer %}
         </div>
     {% endfor %}
+    {% block pagination %}
+        <div class="card mb-3" id="pagination">
+            <div class="row justify-content-center p-1">
+                {% if page != 1 %}
+                    <a class="btn end-button align-self-center p-2" href="?page={{ page|add:'-1' }}">
+                        <i class="material-icons">keyboard_arrow_left</i>
+                    </a>
+                {% endif %}
+                {% if page != 1 and page != 2  %}
+                    <a class="btn my-1" href="{% url 'home' %}"> 1 </a>
+                    <div class="ellipsis my-1 py-1 px-0">...</div>
+                {% endif%}
+                {% for i in i|rjust:10 %}
+                    {% if page == forloop.counter %}
+                        <a class="btn active my-1" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                    {% elif page == 1 and forloop.counter < page|add:'3' %}
+                        <a class="btn my-1" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                    {% elif page == 10 and forloop.counter > page|add:'-3' %}
+                        <a class="btn my-1" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                    {% elif page != 1 and forloop.counter > page|add:'-2' and forloop.counter < page|add:'2' %}
+                        <a class="btn my-1" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page != 9 and page != 10 %}
+                    <div class="ellipsis my-1 py-1 px-0">...</div>
+                    <a class="btn my-1" href="?page=10"> 10 </a>
+                {% endif %}
+                {% if page != 10 %}
+                    <a class="btn end-button align-self-center p-2" href="?page={{ page|add:'1' }}">
+                        <i class="material-icons">keyboard_arrow_right</i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock pagination %}
 {% endblock content %}

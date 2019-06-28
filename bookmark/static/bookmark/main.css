@@ -153,6 +153,51 @@ main {
     border-radius: 0px 0px 13px 13px;
 }
 
+/* pagination card */
+#pagination.card {
+    border-width: 0px;
+    box-shadow: none;
+    height: auto;
+}
+
+/* pagination buttons */
+#pagination .btn {
+    background: transparent;
+    border-width: 0px;
+    border-radius: 30px;
+    color: rgba(51, 51, 51, 0.40);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    line-height: 20px;
+    margin: 0px 2px 0px 2px;
+}
+
+/* active state and hover on pagination buttons */
+#pagination .btn.active,
+#pagination .btn:hover {
+    background: rgba(51, 51, 51, 0.10);
+}
+
+/* pagination ellipses */
+#pagination .ellipsis {
+    color: rgba(51, 51, 51, 0.40);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    line-height: 20px;
+    margin: 0px 2px 0px 2px;
+}
+
+/* pagination end buttons */
+#pagination .end-button,
+#pagination .end-button:hover {
+    background: transparent;
+    font-size: 16px;
+    border-radius: 20px;
+    line-height: 16px;
+}
+
 /***** bookmarks sidebar *****/
 
 /* sidebar header */
