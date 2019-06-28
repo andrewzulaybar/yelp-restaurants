@@ -33,9 +33,17 @@ class SaveView(FormView):
             # Attempt retrieval of object from Restaurant relation
             try:
                 restaurant = Restaurant.objects.filter(pk=business_id).get()
-                if Bookmarks.objects.filter(restaurant=restaurant).exists():
+                if Bookmarks.objects.filter(restaurant=restaurant).exists() and url == '/add-to-bookmarks':
                     # Object is already in bookmarks, display warning message
                     messages.warning(self.request, f'{name} is already in your bookmarks!')
+                elif Bookmarks.objects.filter(restaurant=restaurant).exists() and url == '/add-to-visited':
+                    # Object exists in bookmarks, but we want to delete from bookmarks and add to visited
+                    Bookmarks.objects.filter(restaurant=restaurant).delete()
+                    Visited.objects.create_visited(restaurant=restaurant).save()
+                    messages.success(self.request, f"Added {name} to your visited list!")
+                elif Visited.objects.filter(restaurant=restaurant).exists():
+                    # Object is already in visited, display warning message
+                    messages.warning(self.request, f'{name} is already in your visited list!')
                 else:
                     # Display error message, look into problem
                     messages.error(self.request, 'An error occurred! Please try again later.', extra_tags='danger')
@@ -55,6 +63,9 @@ class SaveView(FormView):
             if url == '/add-to-bookmarks':
                 Bookmarks.objects.create_bookmark(date=datetime.datetime.now(), restaurant=res).save()
                 messages.success(self.request, "Added {name} to bookmarks!".format(name=restaurant['name']))
+            elif url == '/add-to-visited':
+                Visited.objects.create_visited(restaurant=res).save()
+                messages.success(self.request, "Added {name} to your visited list!".format(name=restaurant['name']))
 
     @staticmethod
     def location_form_valid(location):

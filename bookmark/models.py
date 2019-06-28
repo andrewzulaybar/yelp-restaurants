@@ -100,8 +100,15 @@ class RestaurantHasCategory(models.Model):
         unique_together = (('restaurant', 'category'),)
 
 
+class VisitedManager(models.Manager):
+    def create_visited(self, restaurant):
+        return self.create(restaurant=restaurant)
+
+
 class Visited(models.Model):
     restaurant = models.ForeignKey(
         'Restaurant',
         on_delete=models.CASCADE
     )
+
+    objects = VisitedManager()
