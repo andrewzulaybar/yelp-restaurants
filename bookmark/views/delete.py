@@ -23,22 +23,24 @@ class DeleteView(FormView):
     def form_valid(self, form):
         business_id = form.cleaned_data.get('business_id')
         name = form.cleaned_data.get('name')
-        location_id = form.cleaned_data.get('location_id')
-        categories = ast.literal_eval(form.cleaned_data.get('categories'))
+
+        # Retrieve restaurant, location, and category objects related to business_id
+        restaurant = Restaurant.objects.get(business_id=business_id)
+        location = Location.objects.get(restaurant__in=Restaurant.objects.filter(business_id=business_id))
+        categories = Category.objects.filter(
+            restauranthascategory__in=RestaurantHasCategory.objects.filter(restaurant_id=business_id)
+        )
 
         # Delete category from database if no other restaurants are in this category
-        for title in categories:
-            restaurants_in_category = RestaurantHasCategory.objects.filter(category_id=title)
+        for category in categories:
+            restaurants_in_category = RestaurantHasCategory.objects.filter(category=category)
             if len(restaurants_in_category) == 1:
-                Category.objects.filter(title=title).delete()
+                category.delete()
 
         # Delete location from database if no other restaurants share this location
         # NOTE: deletion of location also deletes restaurant by foreign key constraint
-        restaurants_at_location = Restaurant.objects.filter(location_id=location_id)
-        if len(restaurants_at_location) == 1:
-            Location.objects.filter(id=location_id).delete()
-        else:
-            Restaurant.objects.filter(business_id=business_id)
+        restaurants_at_location = Restaurant.objects.filter(location=location)
+        location.delete() if len(restaurants_at_location) == 1 else restaurant.delete()
 
         messages.success(self.request, f'Successfully deleted {name}!')
         return redirect(self.request.META.get('HTTP_REFERER'))
