@@ -9,6 +9,7 @@ class BookmarksMixin(object):
     model = Bookmarks
     template_name = 'bookmark/bookmarks.html'
     context_object_name = 'restaurants'
+    ordering = ['-date']
     paginate_by = 10
 
     # Additional parameters
@@ -48,7 +49,6 @@ class BookmarksListView(BookmarksMixin, ListView):
         else:
             # Form is invalid or form is None: sort by default
             context = self.get_bookmarks(context)
-            self.ordering = ['date']
         return context
 
     def get_bookmarks(self,context):
@@ -123,14 +123,14 @@ class BookmarksListView(BookmarksMixin, ListView):
     def sort_by_rating(self, context):
         context['title'] = 'Bookmarks - Sort by Rating'
 
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
-        self.add_to_context(bookmarks, restaurants)
+        # Retrieve restaurants for each bookmark
+        restaurants = self.get_restaurants(context[self.context_object_name])
+        object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('-rating')
+        context[self.context_object_name] = object_list
 
-        # Sort by highest to lowest rating
-        bookmarks.sort(key=self.__rating, reverse=True)
+        # Retrieve categories for each restaurant
+        context['categories'] = self.get_categories(context[self.context_object_name])
 
-        context[self.context_object_name] = bookmarks
         return context
 
     def sort_by_cuisine(self, context):
