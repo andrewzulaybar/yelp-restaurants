@@ -1,67 +1,95 @@
 from django.views.generic import ListView
+from django.core.paginator import Paginator
 
-from bookmark.api import location, yelp_api
+from bookmark.api import location, distance_matrix
 from bookmark.forms import *
 from bookmark.models import *
 
 
-class BookmarksMixin(object):
+class BookmarksListView(ListView):
     model = Bookmarks
     template_name = 'bookmark/bookmarks.html'
     context_object_name = 'restaurants'
     ordering = ['-date']
     paginate_by = 10
 
-    # Additional parameters
-    params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}
+    def get_queryset(self):
+        # Retrieve restaurants for each bookmark
+        restaurants = self.get_restaurants(Bookmarks.objects.all())
 
-    def add_to_context(self, bookmarks, restaurants):
-        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
-        for restaurant in restaurants:
-            if restaurant.bookmark:
-                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
-                bookmarks.append(r)
-
-
-class BookmarksListView(BookmarksMixin, ListView):
-    def get_context_data(self, **kwargs):
-        context = super(BookmarksListView, self).get_context_data(**kwargs)
         form = SortByForm(self.request.GET or None)
-
         if form.is_valid():
+            # Turn off pagination
+            self.paginate_by = 0
+
             # Sort businesses by given parameter
             sort_by = form.cleaned_data['sort_by']
             if sort_by == 'Distance':
-                context = self.sort_by_distance(context)
+                # Sort by distance ascending
+                queryset = self.sort_by_distance(restaurants)
             elif sort_by == 'Popularity':
-                context = self.sort_by_popularity(context)
+                # Sort by review count descending
+                queryset = Restaurant.objects.filter(business_id__in=restaurants).order_by('-review_count')
             elif sort_by == 'Rating':
-                context = self.sort_by_rating(context)
-            elif sort_by == 'Cuisine':
-                context = self.sort_by_cuisine(context)
+                # Sort by rating descending
+                queryset = Restaurant.objects.filter(business_id__in=restaurants).order_by('-rating')
             elif sort_by == 'Price':
-                context = self.sort_by_price(context)
-            elif sort_by == 'Open Now':
-                context = self.is_open_now(context)
+                # Sort by price ascending
+                queryset = Restaurant.objects.filter(business_id__in=restaurants).order_by('price')
             else:
-                # Sort by 'Date Added'
-                context = self.get_bookmarks(context)
+                # Sort by date added
+                queryset = Restaurant.objects.filter(business_id__in=restaurants)
         else:
-            # Form is invalid or form is None: sort by default
-            context = self.get_bookmarks(context)
-        return context
+            queryset = Restaurant.objects.filter(business_id__in=restaurants)
+        return queryset
 
-    def get_bookmarks(self,context):
-        context['title'] = 'Bookmarks'
+    def get_context_data(self, **kwargs):
+        form = SortByForm(self.request.GET or None)
+        context = super(BookmarksListView, self).get_context_data(**kwargs)
 
-        # Retrieve restaurants for each bookmark
-        restaurants = self.get_restaurants(context[self.context_object_name])
-        context[self.context_object_name] = Restaurant.objects.filter(business_id__in=restaurants)
+        if form.is_valid():
+            sort_by = form.cleaned_data['sort_by']
+            if sort_by == 'Distance':
+                context['title'] = 'Bookmarks - Sorted by Distance'
+            elif sort_by == 'Popularity':
+                context['title'] = 'Bookmarks - Sorted by Popularity'
+            elif sort_by == 'Rating':
+                context['title'] = 'Bookmarks - Sorted by Rating'
+            elif sort_by == 'Price':
+                context['title'] = 'Bookmarks - Sorted by Price'
+            else:
+                context['title'] = 'Bookmarks'
+        else:
+            context['title'] = 'Bookmarks'
 
         # Retrieve categories for each restaurant
         context['categories'] = self.get_categories(context[self.context_object_name])
 
         return context
+
+    @staticmethod
+    def sort_by_distance(restaurants):
+        # Retrieve restaurants for each bookmark
+        queryset = Restaurant.objects.filter(business_id__in=restaurants)
+
+        # Calculate distances from current location to each restaurant
+        destinations = ""
+        for restaurant in list(queryset)[:-1]:
+            destinations += str(restaurant.location.latitude) + ',' + str(restaurant.location.longitude) + '|'
+        else:
+            destinations += str(list(queryset)[-1].location.latitude) \
+                            + ',' + str(list(queryset)[-1].location.longitude)
+        distances = distance_matrix.get_distance(location.CURRENT_LOCATION.replace(" ", ""), destinations)
+
+        # Construct (restaurant, distance) pairs to allow for sorting
+        object_list = {}
+        for restaurant, distance in zip(queryset, distances):
+            object_list[restaurant] = distance
+
+        # Once sorted by distance in increasing order, retrieve only restaurant objects
+        queryset = [pair[0] for pair in sorted(object_list.items(), key=lambda x: x[1])]
+
+        return queryset
 
     @staticmethod
     def get_restaurants(restaurants):
@@ -77,127 +105,3 @@ class BookmarksListView(BookmarksMixin, ListView):
             category = RestaurantHasCategory.objects.filter(restaurant=restaurant)
             categories.append(category[0])
         return categories
-
-    def sort_by_distance(self, context):
-        context['title'] = 'Bookmarks - Sort by Distance'
-
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
-
-        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
-        for restaurant in restaurants:
-            if restaurant.bookmark:
-                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
-
-                # Do business search to find distance from current location
-                params = {'term': r['name'],
-                          'location': location.CURRENT_LOCATION,
-                          'categories': 'restaurants'}
-                search_results = yelp_api.get("v3/businesses/search", params)['businesses']
-
-                # Find matching business in search results
-                for result in search_results:
-                    if result['location']['address1'] == r['location']['address1']:
-                        bookmarks.append(result)
-                        break
-
-        # Sort by closest to furthest away
-        bookmarks.sort(key=self.__distance)
-
-        context[self.context_object_name] = bookmarks
-        return context
-
-    def sort_by_popularity(self, context):
-        context['title'] = 'Bookmarks - Sort by Popularity'
-
-        # Retrieve restaurants for each bookmark, sort by review count descending
-        restaurants = self.get_restaurants(context[self.context_object_name])
-        object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('-review_count')
-        context[self.context_object_name] = object_list
-
-        # Retrieve categories for each restaurant
-        context['categories'] = self.get_categories(context[self.context_object_name])
-
-        return context
-
-    def sort_by_rating(self, context):
-        context['title'] = 'Bookmarks - Sort by Rating'
-
-        # Retrieve restaurants for each bookmark, sort by rating descending
-        restaurants = self.get_restaurants(context[self.context_object_name])
-        object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('-rating')
-        context[self.context_object_name] = object_list
-
-        # Retrieve categories for each restaurant
-        context['categories'] = self.get_categories(context[self.context_object_name])
-
-        return context
-
-    def sort_by_cuisine(self, context):
-        context['title'] = 'Bookmarks - Sort by Cuisine'
-
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
-        self.add_to_context(bookmarks, restaurants)
-
-        # Sort alphabetically by first category title
-        bookmarks.sort(key=self.__cuisine)
-
-        context[self.context_object_name] = bookmarks
-        return context
-
-    def sort_by_price(self, context):
-        context['title'] = 'Bookmarks - Sort by Price'
-
-        # Retrieve restaurants for each bookmark, sort by price ascending
-        restaurants = self.get_restaurants(context[self.context_object_name])
-        object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('price')
-        context[self.context_object_name] = object_list
-
-        # Retrieve categories for each restaurant
-        context['categories'] = self.get_categories(context[self.context_object_name])
-
-        return context
-
-    def is_open_now(self, context):
-        context['title'] = 'Bookmarks - Open Now'
-
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
-
-        # If restaurants in database are bookmarked, pull data from Yelp Fusion API
-        for restaurant in restaurants:
-            if restaurant.bookmark:
-                r = yelp_api.get("v3/businesses/" + restaurant.business_id, self.params)
-                # If restaurant is open now, add to context
-                try:
-                    if r['hours'][0]['is_open_now']:
-                        bookmarks.append(r)
-                except KeyError:
-                    pass
-
-        context[self.context_object_name] = bookmarks
-        return context
-
-    @staticmethod
-    def __distance(elem):
-        return elem['distance']
-
-    @staticmethod
-    def __popularity(elem):
-        return elem['review_count']
-
-    @staticmethod
-    def __rating(elem):
-        return elem['rating']
-
-    @staticmethod
-    def __cuisine(elem):
-        return elem['categories'][0]['title']
-
-    @staticmethod
-    def __price(elem):
-        try:
-            return elem['price']
-        except KeyError:
-            return ""
