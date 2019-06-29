@@ -16,6 +16,7 @@ class SaveView(FormView):
         category_form = CategoryForm(request.POST, prefix='category')
         location_form = LocationForm(request.POST, prefix='location')
         url = request.get_full_path().split()[0]
+        print(url)
 
         if restaurant_form.is_valid() and category_form.is_valid() and location_form.is_valid():
             # Set up parameters to validators
@@ -27,8 +28,12 @@ class SaveView(FormView):
             self.restaurant_form_valid(restaurant, location, url)
             self.category_form_valid(categories, restaurant)
         else:
-            name = restaurant_form['name'].value()
-            business_id = restaurant_form['business_id'].value()
+            if url == '/add-to-visited-from-bookmarks':
+                business_id = request.POST.get('business_id')
+                name = request.POST.get('name')
+            else:
+                business_id = restaurant_form['business_id'].value()
+                name = restaurant_form['name'].value()
 
             # Attempt retrieval of object from Restaurant relation
             try:
@@ -36,7 +41,8 @@ class SaveView(FormView):
                 if Bookmarks.objects.filter(restaurant=restaurant).exists() and url == '/add-to-bookmarks':
                     # Object is already in bookmarks, display warning message
                     messages.warning(self.request, f'{name} is already in your bookmarks!')
-                elif Bookmarks.objects.filter(restaurant=restaurant).exists() and url == '/add-to-visited':
+                elif Bookmarks.objects.filter(restaurant=restaurant).exists() \
+                        and (url == '/add-to-visited' or url == '/add-to-visited-from-bookmarks'):
                     # Object exists in bookmarks, but we want to delete from bookmarks and add to visited
                     Bookmarks.objects.filter(restaurant=restaurant).delete()
                     Visited.objects.create_visited(restaurant=restaurant).save()

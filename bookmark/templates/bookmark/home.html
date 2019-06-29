@@ -63,31 +63,32 @@
                     {% endblock bookmark_button %}
                 </form>
                 <!-- Visited form -->
-                <form action="{% url 'add-to-visited' %}" method="post">
-                    {% csrf_token %}
-                    <!-- Restaurant -->
-                    <input type="hidden" name="restaurant-business_id" value="{{ restaurant.id }}">
-                    <input type="hidden" name="restaurant-name" value="{{ restaurant.name }}">
-                    <input type="hidden" name="restaurant-rating" value="{{ restaurant.rating }}">
-                    <input type="hidden" name="restaurant-review_count" value="{{ restaurant.review_count }}">
-                    <input type="hidden" name="restaurant-price" value="{{ restaurant.price }}">
-                    <input type="hidden" name="restaurant-phone" value="{{ restaurant.phone }}">
-                    <input type="hidden" name="restaurant-image_url" value="{{ restaurant.image_url }}">
-                    <input type="hidden" name="restaurant-yelp_url" value="{{ restaurant.url }}">
-                    <!-- Categories -->
-                    <input type="hidden" name="category-categories" value="{{ restaurant.categories }}">
-                    <!-- Location -->
-                    <input type="hidden" name="location-address" value="{{ restaurant.location.address1 }}">
-                    <input type="hidden" name="location-city" value="{{ restaurant.location.city }}">
-                    <input type="hidden" name="location-province" value="{{ restaurant.location.state }}">
-                    <input type="hidden" name="location-country" value="{{ restaurant.location.country }}">
-                    <input type="hidden" name="location-postal_code" value="{{ restaurant.location.zip_code }}">
-                    <input type="hidden" name="location-longitude" value="{{ restaurant.coordinates.longitude }}">
-                    <input type="hidden" name="location-latitude" value="{{ restaurant.coordinates.latitude }}">
-                    {% block visited_button %}
+                {% block visited %}
+                    <form action="{% url 'add-to-visited' %}" method="post">
+                        {% csrf_token %}
+                        <!-- Restaurant -->
+                        <input type="hidden" name="restaurant-business_id" value="{{ restaurant.id }}">
+                        <input type="hidden" name="restaurant-name" value="{{ restaurant.name }}">
+                        <input type="hidden" name="restaurant-rating" value="{{ restaurant.rating }}">
+                        <input type="hidden" name="restaurant-review_count" value="{{ restaurant.review_count }}">
+                        <input type="hidden" name="restaurant-price" value="{{ restaurant.price }}">
+                        <input type="hidden" name="restaurant-phone" value="{{ restaurant.phone }}">
+                        <input type="hidden" name="restaurant-image_url" value="{{ restaurant.image_url }}">
+                        <input type="hidden" name="restaurant-yelp_url" value="{{ restaurant.url }}">
+                        <!-- Categories -->
+                        <input type="hidden" name="category-categories" value="{{ restaurant.categories }}">
+                        <!-- Location -->
+                        <input type="hidden" name="location-address" value="{{ restaurant.location.address1 }}">
+                        <input type="hidden" name="location-city" value="{{ restaurant.location.city }}">
+                        <input type="hidden" name="location-province" value="{{ restaurant.location.state }}">
+                        <input type="hidden" name="location-country" value="{{ restaurant.location.country }}">
+                        <input type="hidden" name="location-postal_code" value="{{ restaurant.location.zip_code }}">
+                        <input type="hidden" name="location-longitude" value="{{ restaurant.coordinates.longitude }}">
+                        <input type="hidden" name="location-latitude" value="{{ restaurant.coordinates.latitude }}">
+                        <!-- Visited button -->
                         <input type="submit" class="btn-sm btn-primary float-right" id="home-page-visited" value="Visited">
-                    {% endblock visited_button %}
-                </form>
+                    </form>
+                {% endblock visited %}
             </div>
             {% endblock footer %}
         </div>

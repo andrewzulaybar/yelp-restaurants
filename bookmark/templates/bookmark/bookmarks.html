@@ -74,9 +74,16 @@
 {% endblock close_button %}
 
 <!-- Visited button -->
-{% block visited_button %}
-    <input type="submit" class="btn-sm btn-primary btn-block" id="bookmarks-visited" value="Visited">
-{% endblock visited_button %}
+{% block visited %}
+    <form action="{% url 'add-to-visited-from-bookmarks' %}" method="post">
+        {% csrf_token %}
+        <!-- Restaurant -->
+        <input type="hidden" name="business_id" value="{{ restaurant.business_id }}">
+        <input type="hidden" name="name" value="{{ restaurant.name }}">
+        <!-- Visited button -->
+        <input type="submit" class="btn-sm btn-primary btn-block" id="bookmarks-visited" value="Visited">
+    </form>
+{% endblock visited %}
 
 <!-- Bookmark button -->
 {% block bookmark_button %}
