@@ -110,7 +110,7 @@ class BookmarksListView(BookmarksMixin, ListView):
     def sort_by_popularity(self, context):
         context['title'] = 'Bookmarks - Sort by Popularity'
 
-        # Retrieve restaurants for each bookmark
+        # Retrieve restaurants for each bookmark, sort by review count descending
         restaurants = self.get_restaurants(context[self.context_object_name])
         object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('-review_count')
         context[self.context_object_name] = object_list
@@ -123,7 +123,7 @@ class BookmarksListView(BookmarksMixin, ListView):
     def sort_by_rating(self, context):
         context['title'] = 'Bookmarks - Sort by Rating'
 
-        # Retrieve restaurants for each bookmark
+        # Retrieve restaurants for each bookmark, sort by rating descending
         restaurants = self.get_restaurants(context[self.context_object_name])
         object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('-rating')
         context[self.context_object_name] = object_list
@@ -149,14 +149,14 @@ class BookmarksListView(BookmarksMixin, ListView):
     def sort_by_price(self, context):
         context['title'] = 'Bookmarks - Sort by Price'
 
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
-        self.add_to_context(bookmarks, restaurants)
+        # Retrieve restaurants for each bookmark, sort by price ascending
+        restaurants = self.get_restaurants(context[self.context_object_name])
+        object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('price')
+        context[self.context_object_name] = object_list
 
-        # Sort by cheapest to most expensive
-        bookmarks.sort(key=self.__price)
+        # Retrieve categories for each restaurant
+        context['categories'] = self.get_categories(context[self.context_object_name])
 
-        context[self.context_object_name] = bookmarks
         return context
 
     def is_open_now(self, context):
