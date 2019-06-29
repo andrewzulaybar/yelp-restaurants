@@ -31,40 +31,6 @@
 <!-- Pagination -->
 {% block pagination %}
     {% if is_paginated %}
-        <div class="card mb-3" id="pagination">
-            <div class="row justify-content-center p-1">
-                {% if page_obj.has_previous %}
-                    <a class="btn end-button align-self-center p-2" href="?page={{ page_obj.previous_page_number }}">
-                        <i class="material-icons">keyboard_arrow_left</i>
-                    </a>
-                {% endif %}
-                {% if page_obj.number != 1 and page_obj.number != 2  %}
-                    <a class="btn my-1" href="{% url 'bookmarks' %}"> 1 </a>
-                    <div class="ellipsis my-1 py-1 px-0">...</div>
-                {% endif%}
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                        <a class="btn active my-1" href="?page={{ num }}">{{ num }}</a>
-                    {% elif page_obj.number == 1 and num < page_obj.number|add:'3' %}
-                        <a class="btn my-1" href="?page={{ num }}">{{ num }}</a>
-                    {% elif page_obj.number == 10 and num > page_obj.number|add:'-3' %}
-                        <a class="btn my-1" href="?page={{ num }}">{{ num }}</a>
-                    {% elif page_obj.number != 1 and num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
-                        <a class="btn my-1" href="?page={{ num }}">{{ num }}</a>
-                    {% endif %}
-                {% endfor %}
-                {% with page_obj.paginator.num_pages as num_pages %}
-                    {% if page_obj.number != num_pages|add:"-1" and page_obj.number != num_pages %}
-                        <div class="ellipsis my-1 py-1 px-0">...</div>
-                        <a class="btn my-1" href="{{ num_pages }}"> {{ num_pages }} </a>
-                    {% endif %}
-                {% endwith %}
-                {% if page_obj.has_next %}
-                    <a class="btn end-button align-self-center p-2" href="?page={{ page_obj.next_page_number }}">
-                        <i class="material-icons">keyboard_arrow_right</i>
-                    </a>
-                {% endif %}
-            </div>
-        </div>
+        {% include "bookmark/pagination.html" %}
     {% endif %}
 {% endblock pagination %}
