@@ -6,9 +6,10 @@ from bookmark.models import *
 
 
 class BookmarksMixin(object):
-    model = Restaurant
+    model = Bookmarks
     template_name = 'bookmark/bookmarks.html'
     context_object_name = 'restaurants'
+    paginate_by = 10
 
     # Additional parameters
     params = {'location': location.CURRENT_LOCATION, 'sort_by': 'distance', 'categories': 'restaurants'}
@@ -47,52 +48,26 @@ class BookmarksListView(BookmarksMixin, ListView):
         else:
             # Form is invalid or form is None: sort by default
             context = self.get_bookmarks(context)
+            self.ordering = ['date']
         return context
 
-    def get_bookmarks(self, context):
+    @staticmethod
+    def get_bookmarks(context):
         context['title'] = 'Bookmarks'
 
-        # Retrieve bookmark objects
-        restaurants = Bookmarks.objects.raw(
-            ''' SELECT * 
-                FROM bookmark_Bookmarks b
-                INNER JOIN bookmark_Restaurant r on b.restaurant_id = r.business_id
-                INNER JOIN bookmark_Location l on r.location_id = l.id 
-                ORDER BY date DESC '''
-        )
+        # Retrieve restaurants for each bookmark
+        restaurants = []
+        for bookmark in context['restaurants']:
+            restaurants.append(bookmark.restaurant_id)
+        context['restaurants'] = Restaurant.objects.filter(business_id__in=restaurants)
 
-        # Format restaurants for template
-        bookmarks = []
-        for restaurant in restaurants:
-            # Retrieve categories for restaurant
-            categories = []
-            all_categories = Category.objects.raw(
-                ''' SELECT *
-                    FROM bookmark_Restaurant r
-                    INNER JOIN bookmark_RestaurantHasCategory rhc ON r.business_id = rhc.restaurant_id
-                    INNER JOIN bookmark_Category c ON rhc.category_id = c.title
-                    WHERE r.business_id = '%s' ''' % restaurant.business_id
-            )
-            for category in all_categories:
-                categories.append(category.title)
+        # Retrieve categories for each restaurant
+        categories = []
+        for restaurant in context['restaurants']:
+            category = RestaurantHasCategory.objects.filter(restaurant=restaurant)
+            categories.append(category[0])
+        context['categories'] = categories
 
-            # Setup context for template
-            res = {
-                'business_id': restaurant.business_id,
-                'name': restaurant.name,
-                'rating': restaurant.rating,
-                'review_count': restaurant.review_count,
-                'price': restaurant.price,
-                'phone': restaurant.phone,
-                'image_url': restaurant.image_url,
-                'yelp_url': restaurant.yelp_url,
-                'location_id': restaurant.location_id,
-                'address': restaurant.address,
-                'categories': categories
-            }
-            bookmarks.append(res)
-
-        context[self.context_object_name] = bookmarks
         return context
 
     def sort_by_distance(self, context):
