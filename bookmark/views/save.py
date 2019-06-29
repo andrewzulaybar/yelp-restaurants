@@ -16,7 +16,6 @@ class SaveView(FormView):
         category_form = CategoryForm(request.POST, prefix='category')
         location_form = LocationForm(request.POST, prefix='location')
         url = request.get_full_path().split()[0]
-        print(url)
 
         if restaurant_form.is_valid() and category_form.is_valid() and location_form.is_valid():
             # Set up parameters to validators
@@ -98,7 +97,7 @@ class SaveView(FormView):
                 'business_id': restaurant_form.cleaned_data.get('business_id'),
                 'name': restaurant_form.cleaned_data.get('name'),
                 'rating': restaurant_form.cleaned_data.get('rating'),
-                'review_count': restaurant_form.cleaned_data.get('rating'),
+                'review_count': restaurant_form.cleaned_data.get('review_count'),
                 'price': restaurant_form.cleaned_data.get('price'),
                 'phone': restaurant_form.cleaned_data.get('phone'),
                 'image_url': restaurant_form.cleaned_data.get('image_url'),

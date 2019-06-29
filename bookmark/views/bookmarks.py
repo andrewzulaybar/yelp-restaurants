@@ -51,24 +51,32 @@ class BookmarksListView(BookmarksMixin, ListView):
             self.ordering = ['date']
         return context
 
-    @staticmethod
-    def get_bookmarks(context):
+    def get_bookmarks(self,context):
         context['title'] = 'Bookmarks'
 
         # Retrieve restaurants for each bookmark
-        restaurants = []
-        for bookmark in context['restaurants']:
-            restaurants.append(bookmark.restaurant_id)
-        context['restaurants'] = Restaurant.objects.filter(business_id__in=restaurants)
+        restaurants = self.get_restaurants(context[self.context_object_name])
+        context[self.context_object_name] = Restaurant.objects.filter(business_id__in=restaurants)
 
         # Retrieve categories for each restaurant
-        categories = []
-        for restaurant in context['restaurants']:
-            category = RestaurantHasCategory.objects.filter(restaurant=restaurant)
-            categories.append(category[0])
-        context['categories'] = categories
+        context['categories'] = self.get_categories(context[self.context_object_name])
 
         return context
+
+    @staticmethod
+    def get_restaurants(restaurants):
+        object_list = []
+        for bookmark in restaurants:
+            object_list.append(bookmark.restaurant_id)
+        return object_list
+
+    @staticmethod
+    def get_categories(restaurants):
+        categories = []
+        for restaurant in restaurants:
+            category = RestaurantHasCategory.objects.filter(restaurant=restaurant)
+            categories.append(category[0])
+        return categories
 
     def sort_by_distance(self, context):
         context['title'] = 'Bookmarks - Sort by Distance'
@@ -102,14 +110,14 @@ class BookmarksListView(BookmarksMixin, ListView):
     def sort_by_popularity(self, context):
         context['title'] = 'Bookmarks - Sort by Popularity'
 
-        bookmarks = []
-        restaurants = Restaurant.objects.all()
-        self.add_to_context(bookmarks, restaurants)
+        # Retrieve restaurants for each bookmark
+        restaurants = self.get_restaurants(context[self.context_object_name])
+        object_list = Restaurant.objects.filter(business_id__in=restaurants).order_by('-review_count')
+        context[self.context_object_name] = object_list
 
-        # Sort by highest number of reviews to lowest number of reviews
-        bookmarks.sort(key=self.__popularity, reverse=True)
+        # Retrieve categories for each restaurant
+        context['categories'] = self.get_categories(context[self.context_object_name])
 
-        context[self.context_object_name] = bookmarks
         return context
 
     def sort_by_rating(self, context):
